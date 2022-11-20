@@ -104,8 +104,12 @@ const routes = [
         name: 'Create account',
       },
       {
-        path: '/forgot-password',
-        name: 'Forgot password',
+        path: '/recuperar-password',
+        name: 'Recuperar password',
+      },
+      {
+        path: '/restablecer-password',
+        name: 'Restablecer password',
       },
       {
         path: '/app/404',

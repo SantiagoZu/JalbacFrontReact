@@ -6,6 +6,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter,   } from '@windmill/react-u
 import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import CTA from '../components/CTA'
 import Swal from 'sweetalert2'
+import button2 from '../button';
 
 import {
   Table,
@@ -23,21 +24,29 @@ import {
 import { EditIcon, TrashIcon, SearchIcon } from '../icons';
 import { Input2 } from '../components/Input';
 import response from '../utils/demo/dataPedidos'
+import responseDetalles from '../utils/demo/dataProductos'
 const response2 = response.concat([])
+const responseDetallesProductos = responseDetalles.concat([])
 
 function Pedidos() {
  
   const [pageTable2, setPageTable2] = useState(1)
+  const [pageTable3, setPageTable3] = useState(1)
 
   const [dataTable2, setDataTable2] = useState([])
+  const [dataTable3, setDataTable3] = useState([])
 
   // pagination setup
   const resultsPerPage = 10
   const totalResults = response.length
+  const totalResults2 = response.length
 
   // pagination change control
   function onPageChangeTable2(p) {
     setPageTable2(p)
+  }
+  function onPageChangeTable3(p) {
+    setPageTable3(p)
   }
 
   // on page change, load new sliced data
@@ -45,6 +54,9 @@ function Pedidos() {
   useEffect(() => {
     setDataTable2(response2.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
   }, [pageTable2])
+  useEffect(() => {
+    setDataTable3(responseDetallesProductos.slice((pageTable3 - 1) * resultsPerPage, pageTable3 * resultsPerPage))
+  }, [pageTable3])
   /* Despliegue modal editar */
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -133,7 +145,7 @@ function Pedidos() {
     //documento: /^\d{1,10}$/ // 7 a 14 numeros.
   }
   const comparaFechas = (fecha1) => {
-    if(new Date(fecha1).toLocaleDateString() > new Date().toLocaleDateString("es-CO")){
+    if(new Date(fecha1).toLocaleDateString() >= new Date().toLocaleDateString("es-CO")){
    
       return true
     }
@@ -407,45 +419,66 @@ function Pedidos() {
         </ModalFooter>
       </Modal>
       
-      <Modal isOpen={isModalOpenVerDetalle} onClose={closeModalVerDetalle}>
-        <ModalHeader className='mb-3'> Pedido</ModalHeader>
+      <Modal isOpen={isModalOpenVerDetalle} onClose={closeModalVerDetalle}  >
+        <ModalHeader className='mb-8'> detalles producto</ModalHeader>
         <ModalBody>          
-            <Label className="mt-4">
-              <span>Cliente</span>
-              <Select className="mt-1" value="Josue" >
-                <option disabled>Josue</option>
-                <option disabled>Barreto</option>
-              </Select>
-            </Label>
-
-            <Label className="mt-4">
-              <span>fecha Entrega</span>
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <input
-                  className="block w-full  mt-1 mb-3 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                  placeholder=""
-                  disabled
-                  value=""
-                  type="date"
-                />
-                <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                </div>
-              </div>
-            </Label>
-            <Label className="mt-4">
-              <span>estado</span>
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <input
-                  className="block w-full pl-10 mt-1 mb-3 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                  placeholder=""
-                  disabled
-                  value=""
-                />
-                <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                </div>
-              </div>
-            </Label>
-           
+        <TableContainer >
+        <Table >
+          <TableHeader>
+            <tr >
+              <TableCell>ID</TableCell>
+              <TableCell>Nombre anillo</TableCell>
+              <TableCell>Tipo</TableCell>
+              <TableCell>Peso</TableCell>
+              <TableCell>Tamaño anillo</TableCell>
+              <TableCell>Tamaño piedra</TableCell>
+              <TableCell>Material</TableCell>
+              <TableCell>Modelo</TableCell>
+              <TableCell>Detalle</TableCell>
+              <TableCell>Informacion adicional</TableCell>
+            </tr>
+          </TableHeader>
+          <TableBody className="w-12">
+            {dataTable3.map((producto, i) => (
+              <TableRow key={i}>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.ID}</p>
+                </TableCell>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.nombre}</p>
+                </TableCell>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tipo}</p>
+                </TableCell>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.peso}</p>
+                </TableCell>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoAnillo}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoPiedra}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.material}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.modelo}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.informacion}</p>
+                </TableCell>                
+               
+             
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+   
+        </TableContainer>           
         </ModalBody>
 
         <ModalFooter>          

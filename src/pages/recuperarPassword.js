@@ -32,8 +32,8 @@ function recuperarPassword() {
 
               <Label>
                 <span>Ingrese su correo</span>
-                <Input className="mt-1" placeholder="Jane Doe" />
-                <i className='mt-1'>Al siguiente correo se le enviara un link para realizar la verificación y obtener devuelta su contraseña.</i>
+                <Input className="mt-1 mb-2" placeholder="Jane Doe" />
+                <i>Al siguiente correo se le enviara un link para realizar la verificación y obtener devuelta su contraseña.</i>
               </Label>
 
               <Button tag={Link} to="/login" block className="mt-4">

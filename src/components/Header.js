@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { SidebarContext } from '../context/SidebarContext'
 import { NavLink, Route } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
   SearchIcon,
   MoonIcon,
@@ -121,7 +122,7 @@ function Header() {
               isOpen={isProfileMenuOpen}
               onClose={() => setIsProfileMenuOpen(false)}
             >
-                <DropdownItem tag="a" href="#" >
+                <DropdownItem tag="a" href="/app/perfil" >
                   <OutlinePersonIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                   <span>Perfil</span>
                 </DropdownItem>
@@ -129,10 +130,12 @@ function Header() {
                 <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                 <span>Configuración</span>
               </DropdownItem>
-              <DropdownItem onClick={() => alert('Log out!')}>
+              <DropdownItem href="">
                 <OutlineLogoutIcon className="w-4 h-4 mr-3" aria-hidden="true" />
+                <Link to="/login">
                 <span>Cerrar sesión</span>
-              </DropdownItem>
+                </Link>
+              </DropdownItem>   
             </Dropdown>
           </li>
         </ul>

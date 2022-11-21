@@ -251,19 +251,19 @@ function Empleados() {
             <Label className="mt-4">
               <span>Nombre</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Nombre" type="text" estado={nombre} cambiarEstado={cambiarNombre} expresionRegular={expresiones.nombre} mensajeError={"Digíte el nombre correctamente"} />
+                <Input2 placeholder="Nombre" type="text" estado={nombre} cambiarEstado={cambiarNombre} expresionRegular={expresiones.nombre} mensajeError={"El nombre no puede incluir números"} />
               </div>
             </Label>
             <Label className="mt-4">
               <span>Apellido</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Apellido" type="text" estado={apellido} cambiarEstado={cambiarApellido} expresionRegular={expresiones.nombre} mensajeError={"Digíte el apellido correctamente"} />
+                <Input2 placeholder="Apellido" type="text" estado={apellido} cambiarEstado={cambiarApellido} expresionRegular={expresiones.nombre} mensajeError={"El apellido no puede incluir números"} />
               </div>
             </Label>
             <Label className="mt-4">
               <span>Documento</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Documento" type="number" estado={documento} cambiarEstado={cambiarDocumento} expresionRegular={expresiones.documento} mensajeError={"Digíte el documento correctamente"} />
+                <Input2 placeholder="Documento" type="number" estado={documento} cambiarEstado={cambiarDocumento} expresionRegular={expresiones.documento} mensajeError={"Digíte su documento de identidad sin puntos ni letras"} />
                 <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                 </div>
               </div>
@@ -271,7 +271,7 @@ function Empleados() {
             <Label className="mt-4">
               <span>Correo</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Correo" type="email" estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Digíte el correo correctamente"} />
+                <Input2 placeholder="Correo" type="email" estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Debe incluir simbolo @ y el dominio. Ejemplo: example@gmail.com"} />
                 <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                 </div>
               </div>

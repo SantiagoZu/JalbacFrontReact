@@ -11,11 +11,11 @@ const routes = [
     icon: 'HomeIcon', // the component being exported from icons/index.js
     name: 'Dashboard', // name that appear in Sidebar
   },
-  {
+  /*{
     path: '/app/forms',
     icon: 'FormsIcon',
-    name: 'Forms',
-  },
+    name: '',
+  },*/
   {
     icon: 'PagesIcon',
     name: 'Configuración',
@@ -65,6 +65,7 @@ const routes = [
       },
     ],
   },
+  /*
   {
     path: '/app/cards',
     icon: 'CardsIcon',
@@ -104,8 +105,12 @@ const routes = [
         name: 'Create account',
       },
       {
-        path: '/forgot-password',
-        name: 'Forgot password',
+        path: '/recuperar-password',
+        name: 'Recuperar password',
+      },
+      {
+        path: '/restablecer-password',
+        name: 'Restablecer password',
       },
       {
         path: '/app/404',
@@ -116,7 +121,7 @@ const routes = [
         name: 'Blank',
       },
     ],
-  },
+  },*/
 ]
 
 export default routes

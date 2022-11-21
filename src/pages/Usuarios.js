@@ -4,7 +4,8 @@ import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { Modal, ModalHeader, ModalBody, ModalFooter,   } from '@windmill/react-ui';
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
-import CTA from '../components/CTA'
+import { MensajeErrorFormulario } from '../components/styles/styles';
+
 import {
   Table,
   TableHeader,
@@ -19,13 +20,15 @@ import {
   Pagination,
 } from '@windmill/react-ui'
 import { EditIcon, TrashIcon, MailIcon, OutlinePersonIcon } from '../icons';
-import { SearchIcon } from '../icons'
-
+import { SearchIcon } from '../icons';
 import response from '../utils/demo/dataUsuarios'
+import { Input2 } from '../components/Input';
+import Swal from 'sweetalert2'
+
 const response2 = response.concat([])
 
 function Usuario() {
- 
+
   const [pageTable2, setPageTable2] = useState(1)
 
   const [dataTable2, setDataTable2] = useState([])
@@ -55,12 +58,9 @@ function Usuario() {
       setIsModalOpen(false)
     }
 
-    // VALIDACIÓN 
-  
-    const [isModalOpen2, setIsModalOpen2] = useState(false)
+  const [isModalOpen2, setIsModalOpen2] = useState(false)
 
     function openModal2() {
-      setIsModalOpen(false)
       setIsModalOpen2(true)
     }
 
@@ -68,55 +68,93 @@ function Usuario() {
       setIsModalOpen2(false)
     }
 
-    // ELIMINAR
+  //VALIDACIÓN USUARIO
 
-    const [isModalOpen3, setIsModalOpen3] = useState(false)
+  const [correo, cambiarCorreo] = useState({ campo: '', valido: null });
+  const [formularioValido, cambiarFormularioValido] = useState(null);
 
-    function openModal3() {
-      setIsModalOpen3(true)
+  const expresiones = {
+    usuario: /^[a-zA-Z0-9\_\-]{4,16}$/, // Letras, numeros, guion y guion_bajo
+    nombre: /^[a-zA-ZÀ-ÿ\s]{1,25}$/, // Letras y espacios, pueden llevar acentos.
+    password: /^.{4,12}$/, // 4 a 12 digitos.
+    correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+    telefono: /^\d{7,14}$/, // 7 a 14 numeros.
+    documento: /^\d{1,10}$/ // 7 a 14 numeros.
+  }
+
+  const alertUsuarioCreado = () => {
+    Swal.fire({
+      title: "¡El usuario ha sido creado correctamente!",
+      icon: "success"
+    })
+      .then((value) => {
+        closeModal();
+      })
+  }
+
+  const alertUsuarioEditado = () => {
+    Swal.fire({
+      title: "¡El usuario ha sido editado correctamente!",
+      icon: "success"
+    })
+      .then((value) => {
+        closeModal();
+      })
+  }
+
+  const alertUsuarioIncorrecto = () => {
+    Swal.fire({
+      title: "¡Sopas! Digite el formulario correctamente",
+      icon: "error"
+    })
+
+  }
+
+  const alertEliminado = () => {
+    Swal.fire({
+      title: '¿Estás seguro que deseas eliminar el usuario?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          '¡Eliminado!',
+          'El usuario se ha eliminado correctamente.',
+          'success'
+        )
+      }
+    })
+
+  }
+
+  const validacionUsuario = (e) => {
+    e.preventDefault();
+    if (correo.valido === 'true') {
+      cambiarFormularioValido(true);
+      cambiarCorreo({ campo: '', valido: null });
+      alertUsuarioCreado();
+
+    } else {
+      cambiarFormularioValido(false);
+      alertUsuarioIncorrecto();
     }
+  }
 
-    function closeModal3() {
-      setIsModalOpen3(false)
+  const validacionUsuarioEditar = (e) => {
+    e.preventDefault();
+    if (correo.valido === 'true') {
+      cambiarFormularioValido(true);
+      cambiarCorreo({ campo: '', valido: null });
+      alertUsuarioEditado();
+
+    } else {
+      cambiarFormularioValido(false);
+      alertUsuarioIncorrecto();
     }
-
-    // VALIDAR ELIMINAR
-
-    const [isModalOpen4, setIsModalOpen4] = useState(false)
-
-    function openModal4() {
-      setIsModalOpen3(false)
-      setIsModalOpen4(true)
-    }
-
-    function closeModal4() {
-      setIsModalOpen4(false)
-    }
-
-    //EDITAR
-
-    const [isModalOpen5, setIsModalOpen5] = useState(false)
-
-    function openModal5() {
-      setIsModalOpen5(true)
-    }
-
-    function closeModal5() {
-      setIsModalOpen5(false)
-    }
-
-    //VALIDAR EDITAR
-
-    const [isModalOpen6, setIsModalOpen6] = useState(false)
-
-    function openModal6() {
-      setIsModalOpen5(false)
-      setIsModalOpen6(true)
-    }
-
-    function closeModal6() {
-      setIsModalOpen6(false)
-    }
+  }
 
   return (
     <>
@@ -172,11 +210,11 @@ function Usuario() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">
-                    <Button layout="link" size="icon" aria-label="Edit"  onClick={openModal5}>
+                    <Button layout="link" size="icon" aria-label="Edit"  onClick={openModal2}>
                       <EditIcon className="w-5 h-5" aria-hidden="true"/>
                     </Button>
                     <Button layout="link" size="icon" aria-label="Delete">
-                      <TrashIcon className="w-5 h-5" aria-hidden="true" onClick={openModal3} />
+                      <TrashIcon className="w-5 h-5" aria-hidden="true" onClick={alertEliminado} />
                     </Button>
                   </div>
                 </TableCell>
@@ -194,6 +232,7 @@ function Usuario() {
         </TableFooter>
       </TableContainer>
 
+    <form action='' onSubmit={validacionUsuario}>  
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalHeader className='mb-3'>Registrar usuario</ModalHeader>
         <ModalBody>          
@@ -208,12 +247,7 @@ function Usuario() {
             <Label className="mt-4">
               <span>Correo</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <input
-                  className="block w-full pl-10 mt-1 mb-3 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                  placeholder=""
-                />
-                <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                </div>
+                <Input2 placeholder="Ingrese el correo" type="text" estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Debe incluir simbolo @ y el dominio. Ejemplo: example@gmail.com"}/>
               </div>
             </Label>
 
@@ -233,7 +267,7 @@ function Usuario() {
             </Button>
           </div>
           <div className="hidden sm:block">
-            <Button onClick={openModal2}>Enviar</Button>
+            <Button onClick={validacionUsuario}>Enviar</Button>
           </div>
 
           <div className="block w-full sm:hidden">
@@ -248,65 +282,10 @@ function Usuario() {
           </div>
         </ModalFooter>
       </Modal>
+    </form>
 
+    <form action='' onSubmit={validacionUsuarioEditar}>
       <Modal isOpen={isModalOpen2} onClose={closeModal2}>
-        <ModalHeader>Registro usuario</ModalHeader>
-        <ModalBody>
-          ¡Registro exitoso!              
-        </ModalBody>
-        <ModalFooter>
-          <div className="hidden sm:block" onClick={closeModal2}>
-            <Button>Aceptar</Button>
-          </div>          
-          <div className="block w-full sm:hidden">
-            <Button block size="large" onClick={closeModal2}>
-              Aceptar
-            </Button>
-          </div>
-        </ModalFooter>
-      </Modal>
-
-      <Modal isOpen={isModalOpen3} onClose={closeModal3}>
-        <ModalHeader>Eliminar usuario</ModalHeader>
-        <ModalBody>
-          ¿Está seguro de que desea eliminar el usuario?
-        </ModalBody>
-        <ModalFooter>          
-          <div className="hidden sm:block">
-            <Button layout="outline" onClick={closeModal3}>
-              Cancelar
-            </Button>
-          </div>
-          <div className="hidden sm:block">
-            <Button onClick={openModal4}>Aceptar</Button>
-          </div>
-          <div className="block w-full sm:hidden">
-            <Button block size="large" layout="outline" onClick={closeModal3}>
-              Cancelar
-            </Button>
-          </div>
-          <div className="block w-full sm:hidden">
-            <Button block size="large" onClick={openModal4}>Aceptar</Button>
-          </div>
-        </ModalFooter>
-      </Modal>
-
-      <Modal isOpen={isModalOpen4} onClose={closeModal4}>
-        <ModalHeader>Eliminar usuario</ModalHeader>
-        <ModalBody>
-          Usuario eliminado correctamente.
-        </ModalBody>
-        <ModalFooter>                   
-          <div className="hidden sm:block">
-            <Button onClick={closeModal4}>Aceptar</Button>
-          </div>
-          <div className="block w-full sm:hidden">
-            <Button block size="large" onClick={closeModal4}>Aceptar</Button>
-          </div>
-        </ModalFooter>
-      </Modal>
-
-      <Modal isOpen={isModalOpen5} onClose={closeModal5}>
         <ModalHeader className='mb-3'>Editar usuario</ModalHeader>
         <ModalBody>          
             <Label className="mt-4">
@@ -320,12 +299,7 @@ function Usuario() {
             <Label className="mt-4">
               <span>Correo</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <input
-                  className="block w-full pl-10 mt-1 mb-3 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                  placeholder=""
-                />
-                <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                </div>
+                <Input2 placeholder="Ingrese el correo" type="text" estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Debe incluir simbolo @ y el dominio. Ejemplo: example@gmail.com"}/>
               </div>
             </Label>
 
@@ -340,43 +314,27 @@ function Usuario() {
 
         <ModalFooter>          
           <div className="hidden sm:block">
-            <Button layout="outline" onClick={closeModal5}>
+            <Button layout="outline" onClick={closeModal2}>
               Cancelar
             </Button>
           </div>
           <div className="hidden sm:block">
-            <Button onClick={openModal6}>Enviar</Button>
+            <Button onClick={validacionUsuarioEditar}>Enviar</Button>
           </div>
 
           <div className="block w-full sm:hidden">
-            <Button block size="large" layout="outline" onClick={closeModal5}>
-              Cancel
+            <Button block size="large" layout="outline" onClick={closeModal2}>
+              Cancelar
             </Button>
           </div>
           <div className="block w-full sm:hidden">
             <Button block size="large">
-              Accept
-            </Button>
-          </div>
-        </ModalFooter>
-      </Modal>
-
-      <Modal isOpen={isModalOpen6} onClose={closeModal6}>
-        <ModalHeader>Actualización usuario</ModalHeader>
-        <ModalBody>
-          Actualización de usuario exitosa!              
-        </ModalBody>
-        <ModalFooter>
-          <div className="hidden sm:block" onClick={closeModal6}>
-            <Button>Aceptar</Button>
-          </div>          
-          <div className="block w-full sm:hidden">
-            <Button block size="large" onClick={closeModal6}>
               Aceptar
             </Button>
           </div>
         </ModalFooter>
       </Modal>
+    </form>
     </>
   )
 }

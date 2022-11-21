@@ -57,9 +57,15 @@ function Login() {
               <p className="mt-4">
                 <Link
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  to="/forgot-password"
+                  to="/recuperar-password"
                 >
-                  ¿Olvidaste tu contraseña?
+                  Recuperar contraseña
+                </Link>
+                <Link
+                  className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline ml-1"
+                  to="/restablecer-password"
+                >
+                  | Restablecer contraseña
                 </Link>
               </p>
               <p className="mt-1">

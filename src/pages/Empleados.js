@@ -24,7 +24,6 @@ import { SearchIcon } from '../icons'
 import response from '../utils/demo/dataEmpleados'
 import { Input2 } from '../components/Input';
 import Swal from 'sweetalert2'
-import { Alerta } from '../components/Alerta';
 
 const response2 = response.concat([])
 

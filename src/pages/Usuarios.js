@@ -24,7 +24,6 @@ import { SearchIcon } from '../icons';
 import response from '../utils/demo/dataUsuarios'
 import { Input2 } from '../components/Input';
 import Swal from 'sweetalert2'
-import { Alerta } from '../components/Alerta';
 
 const response2 = response.concat([])
 
@@ -268,7 +267,7 @@ function Usuario() {
             </Button>
           </div>
           <div className="hidden sm:block">
-            <Button onClick={alertUsuarioCreado}>Enviar</Button>
+            <Button onClick={validacionUsuario}>Enviar</Button>
           </div>
 
           <div className="block w-full sm:hidden">
@@ -300,12 +299,7 @@ function Usuario() {
             <Label className="mt-4">
               <span>Correo</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <input
-                  className="block w-full pl-10 mt-1 mb-3 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                  placeholder=""
-                />
-                <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                </div>
+                <Input2 placeholder="Ingrese el correo" type="text" estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Debe incluir simbolo @ y el dominio. Ejemplo: example@gmail.com"}/>
               </div>
             </Label>
 
@@ -325,7 +319,7 @@ function Usuario() {
             </Button>
           </div>
           <div className="hidden sm:block">
-            <Button onClick={alertUsuarioEditado}>Enviar</Button>
+            <Button onClick={validacionUsuarioEditar}>Enviar</Button>
           </div>
 
           <div className="block w-full sm:hidden">

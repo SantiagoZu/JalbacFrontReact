@@ -6,6 +6,7 @@ import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import { MensajeErrorFormulario } from '../components/styles/styles';
 
+
 import {
   Table,
   TableHeader,
@@ -24,7 +25,6 @@ import { SearchIcon } from '../icons'
 import response from '../utils/demo/dataEmpleados'
 import { Input2 } from '../components/Input';
 import Swal from 'sweetalert2'
-import { Alerta } from '../components/Alerta';
 
 const response2 = response.concat([])
 
@@ -124,7 +124,6 @@ function Empleados() {
         )
       }
     })
-
   }
 
   const validacionFormulario = (e) => {

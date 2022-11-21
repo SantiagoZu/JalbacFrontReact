@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
-import CTA from '../components/CTA'
 import {
   Table,
   TableHeader,
@@ -19,27 +18,23 @@ import {
 import { SearchIcon } from '../icons'
 import {Input} from '@windmill/react-ui'
 import { EditIcon, TrashIcon } from '../icons';
-
 import response from '../utils/demo/dataRoles'
+import {CrearRol, EliminarRol, EditarRol} from '../components/modals/modalRoles'
+
 const response2 = response.concat([])
 
 function Roles() {
  
   const [pageTable2, setPageTable2] = useState(1)
-
   const [dataTable2, setDataTable2] = useState([])
 
-  // pagination setup
   const resultsPerPage = 10
   const totalResults = response.length
 
-  // pagination change control
   function onPageChangeTable2(p) {
     setPageTable2(p)
   }
 
-  // on page change, load new sliced data
-  // here you would make another server request for new data
   useEffect(() => {
     setDataTable2(response2.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
   }, [pageTable2])
@@ -50,12 +45,7 @@ function Roles() {
 
       <SectionTitle>Tabla roles</SectionTitle>
       <div className="flex ml-auto mb-6">
-        <Button>
-          Crear Rol
-          <span className="ml-2" aria-hidden="true">
-            +
-          </span>
-        </Button>
+          <CrearRol/>         
         <div className="flex justify-center flex-1 ml-5">
           <div className="relative w-full max-w-xl mr-6 focus-within:text-purple-500">
             <div className="absolute inset-y-0 flex items-center pl-2">
@@ -96,10 +86,8 @@ function Roles() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">
-                    <Button layout="link" size="icon" aria-label="Edit">
-                      <EditIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                    <Button layout="link" size="icon" aria-label="Delete">
+                    <EditarRol/>
+                    <Button layout="link" size="icon" aria-label="Delete" onClick={EliminarRol}>
                       <TrashIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
                   </div>
@@ -116,7 +104,7 @@ function Roles() {
             label="Table navigation"
           />
         </TableFooter>
-      </TableContainer>
+      </TableContainer>      
     </>
   )
 }

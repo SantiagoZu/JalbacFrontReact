@@ -48,7 +48,7 @@ function Devoluciones() {
 
       
 
-      <SectionTitle>Que pene tan grande bro</SectionTitle>
+      <SectionTitle></SectionTitle>
       <div className="flex ml-auto mb-6">
         <Button>
           Crear Devolución

@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import ImageLight from '../assets/img/forgot-password-office.jpeg'
-import ImageDark from '../assets/img/forgot-password-office-dark.jpeg'
 import { Label, Input, Button } from '@windmill/react-ui'
 
 function recuperarPassword() {
@@ -15,12 +14,6 @@ function recuperarPassword() {
               aria-hidden="true"
               className="object-cover w-full h-full dark:hidden"
               src={ImageLight}
-              alt="Office"
-            />
-            <img
-              aria-hidden="true"
-              className="hidden object-cover w-full h-full dark:block"
-              src={ImageDark}
               alt="Office"
             />
           </div>
@@ -40,7 +33,7 @@ function recuperarPassword() {
                 Recuperar
               </Button>
             </div>
-          </main>
+          </main> 
         </div>
       </div>
     </div>

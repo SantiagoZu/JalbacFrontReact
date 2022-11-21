@@ -111,7 +111,7 @@ function Empleados() {
       title: '¿Estás seguro que deseas eliminar el empleado?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#7e3af2',
       cancelButtonColor: '#d33',
       confirmButtonText: '¡Sí, eliminar!'
     }).then((result) => {
@@ -161,7 +161,7 @@ function Empleados() {
             <Input
               className="pl-8 text-gray-700"
               placeholder="Buscar usuario"
-            />
+            />  
           </div>
         </div>
       </div>

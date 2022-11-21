@@ -238,22 +238,22 @@ function Pedidos() {
             </tr>
           </TableHeader>
           <TableBody>
-            {dataTable2.map((empleado, i) => (
+            {dataTable2.map((pedido, i) => (
               <TableRow key={i}>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.ID}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.ID}</p>
                 </TableCell>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.FechaPedido}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.FechaPedido}</p>
                 </TableCell>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Cliente}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.Cliente}</p>
                 </TableCell>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.FechaEntrega}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.FechaEntrega}</p>
                 </TableCell>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Estado}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.Estado}</p>
                 </TableCell>                
                 <TableCell >
                   <Button layout="link"  className='ml-6 mr-6 pr-5' size="icon" aria-label="Edit" onClick={openModalVerDetalle}>

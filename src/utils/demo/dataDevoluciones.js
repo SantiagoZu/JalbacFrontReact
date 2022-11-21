@@ -1,21 +1,15 @@
 export default [{
     ID: '1',
-    Pedido: '4',
-    Empleado: '2, 3',
-    FechaPedido: '11/11/2022',
+    FechaPedido: '11/11/2001',
     Cliente: '3',
     FechaEntrega: '11/11/2011',
-    Motivo: 'Falta de minerales',
-    Estado: 'Devuelto'
+    Estado: 'Entregado'
 },
 {
     ID: '2',
-    Pedido: '3',
-    Empleado: '2, 3, 7',
-    FechaPedido: '12/01/2017',
-    Cliente: '3',
-    FechaEntrega: '11/11/2011',
-    Motivo: 'Falta de personal',
-    Estado: 'Devuelto'
+    FechaPedido: '06/16/2016',
+    Cliente: '4',
+    FechaEntrega: '24/01/2017',
+    Estado: 'En proceso'
 }    
 ]

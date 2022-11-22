@@ -5,6 +5,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, } from '@windmill/react-ui'
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import { MensajeErrorFormulario } from '../components/styles/styles';
+import Footer from '../components/Footer';
 
 import {
   Table,

@@ -104,7 +104,7 @@ function Usuario() {
 
   const alertUsuarioIncorrecto = () => {
     Swal.fire({
-      title: "¡Sopas! Digite el formulario correctamente",
+      title: "Digite el formulario correctamente",
       icon: "error"
     })
 
@@ -206,7 +206,7 @@ function Usuario() {
                     <p className="text-xs text-gray-600 dark:text-gray-400">{rol.Correo}</p>
                 </TableCell>
                 <TableCell>
-                  <Badge type={rol.status}>{rol.Estado}</Badge>
+                  <p className="text-xs text-gray-600 dark:text-gray-400" type={rol.status}>{rol.Estado}</p>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">

@@ -9,6 +9,7 @@ import PageTitle from '../components/Typography/PageTitle'
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '../icons'
 import RoundIcon from '../components/RoundIcon'
 import response from '../utils/demo/tableData'
+import { SearchIcon } from '../icons'
 import {
   TableBody,
   TableContainer,
@@ -27,6 +28,7 @@ import {
   lineOptions,
   doughnutLegends,
   lineLegends,
+  pedidosEmpleado,
 } from '../utils/demo/chartsData'
 
 function Dashboard() {
@@ -65,15 +67,6 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Balance de pedidos" value="$ 46,760.89">
-          <RoundIcon
-            icon={MoneyIcon}
-            iconColorClass="text-green-500 dark:text-green-100"
-            bgColorClass="bg-green-100 dark:bg-green-500"
-            className="mr-4"
-          />
-        </InfoCard>
-
         <InfoCard title="Nuevos clientes" value="376">
           <RoundIcon
             icon={CartIcon}
@@ -94,7 +87,14 @@ function Dashboard() {
       </div> 
 
       <PageTitle>Gráficos</PageTitle>
-      <div className="grid gap-6 mb-8 md:grid-cols-2">
+
+      <div className="flex justify-left">
+        <div>
+          <input  className='block w-full pl-4 mt-1 mb-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input' type="date" id="fechaEditar"/> 
+        </div>
+      </div>
+
+      <div className="grid gap-6 mb-8 md:grid-cols-2 mt-3">
         <ChartCard title="Servicio mas solicitado">
           <Doughnut {...doughnutOptions} />
           <ChartLegend legends={doughnutLegends} />
@@ -102,6 +102,11 @@ function Dashboard() {
 
         <ChartCard title="Cantidad de pedidos">
           <Line {...lineOptions} />
+          <ChartLegend legends={lineLegends} />
+        </ChartCard>
+
+        <ChartCard title="Cantidad de pedidos despachados por empleado">
+          <Line {...pedidosEmpleado} />
           <ChartLegend legends={lineLegends} />
         </ChartCard>
       </div>

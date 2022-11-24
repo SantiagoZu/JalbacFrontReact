@@ -26,7 +26,7 @@ export const doughnutOptions = {
         label: 'Dataset 1',
       },
     ],
-    labels: ['Vaceado', 'Diseño 3D', 'Terminado a mano'],
+    labels: ['% Vaceado', '% Diseño 3D', '% Terminado a mano'],
   },
   options: {
     responsive: true,
@@ -39,7 +39,7 @@ export const doughnutOptions = {
 
 export const lineOptions = {
   data: {
-    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre'],
     datasets: [
       {
         label: 'Pedidos',
@@ -49,7 +49,57 @@ export const lineOptions = {
          */
         backgroundColor: '#0694a2',
         borderColor: '#0694a2',
-        data: [43, 48, 40, 54, 67, 73, 70],
+        data: [43, 48, 40, 54, 67, 73, 70, 42, 21, 34, 21],
+        fill: false,
+      },
+      
+    ],
+  },
+  options: {
+    responsive: true,
+    tooltips: {
+      mode: 'index',
+      intersect: false,
+    },
+    hover: {
+      mode: 'nearest',
+      intersect: true,
+    },
+    scales: {
+      x: {
+        display: true,
+        scaleLabel: {
+          display: true,
+          labelString: 'Month',
+        },
+      },
+      y: {
+        display: true,
+        scaleLabel: {
+          display: true,
+          labelString: 'Value',
+        },
+      },
+    },
+  },
+  legend: {
+    display: false,
+  },
+}
+
+export const pedidosEmpleado = {
+  data: {
+    labels: ['Josué', 'Santiago', 'Samuel', 'Colorado'],
+    datasets: [
+      {
+        label: 'Pedidos',
+        /**
+         * These colors come from Tailwind CSS palette
+         * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
+         */
+        backgroundColor: '#0694a2',
+        borderColor: '#0694a2',
+        data: [25, 42, 20, 2],
         fill: false,
       },
       

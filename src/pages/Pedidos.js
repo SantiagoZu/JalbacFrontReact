@@ -254,9 +254,14 @@ function Pedidos() {
   const [tamanoPiedra, cambiarTamanoPiedra] = useState({ campo: '', valido: null });
   const [detalle, cambiarDetalle] = useState({ campo: '', valido: null });
   const [informacion, cambiarInformacion] = useState({ campo: '', valido: null });
-  
  
-
+ 
+ 
+  let mostrarTabla = "hidden";
+  function TablaProducto(props)  {
+    
+  }
+  
   const expresionesProducto = {
     nombre: /^[A-Za-z0-9 ]+$/, // no caracteres especiales
     peso: /^\d{1,14}$/,     ///^.{4,12}$/ de 4 a 12 digitos
@@ -268,7 +273,7 @@ function Pedidos() {
   }
   const validacionFormularioProducto = (e) => {
     e.preventDefault();
-    if (nombre.valido === 'true'  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido ) {
+    if (nombre.valido   &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido ) {
       
       cambiarFormularioValidoProducto(true);
       cambiarNombre({ campo: '', valido: null });
@@ -276,7 +281,8 @@ function Pedidos() {
       cambiarTamanoAnillo({ campo: '', valido: null });
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
-
+      mostrarTabla = "";
+      alert("gol")
       alertEditadoCorrecto("Producto");
 
     } else {
@@ -286,7 +292,7 @@ function Pedidos() {
   }
   const validacionFormularioEditarProducto = (e) => {
     e.preventDefault();
-    if (nombre.valido === 'true'  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && informacion.valido ) {
+    if (nombre.valido  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && informacion.valido ) {
       
       cambiarFormularioValidoEditarProducto(true);
       cambiarNombre({ campo: '', valido: null });
@@ -295,7 +301,7 @@ function Pedidos() {
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
       cambiarInformacion({ campo: '', valido: null });
-
+      
       alertEditadoCorrecto("Producto");
 
     } else {
@@ -303,7 +309,7 @@ function Pedidos() {
       alertEditadoIncorrecto();
     }
   }
-   
+  
   return (
     <>
       <PageTitle>Pedidos</PageTitle>
@@ -412,143 +418,145 @@ function Pedidos() {
                 <option>Entregado</option>
               </Select>
             </Label>
-            <TableContainer >
-        <Table >
-          <TableHeader>
-            <tr >
-              <TableCell>ID</TableCell>
-              <TableCell>Nombre anillo</TableCell>
-              <TableCell>Tipo</TableCell>
-              <TableCell>Peso</TableCell>
-              <TableCell>Tamaño anillo</TableCell>
-              <TableCell>Tamaño piedra</TableCell>
-              <TableCell>Material</TableCell>
-              <TableCell>Detalle</TableCell>
-              <TableCell>Informacion adicional</TableCell>
-              <TableCell>acciones</TableCell>
-            </tr>
-          </TableHeader>
-          <TableBody className="w-12">
-            {dataTable3.map((producto, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.ID}</p>
-                </TableCell>
-                <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.nombre}</p>
-                </TableCell>
-                <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tipo}</p>
-                </TableCell>
-                <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.peso}</p>
-                </TableCell>
-                <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoAnillo}</p>
-                </TableCell>                
-                <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoPiedra}</p>
-                </TableCell>                
-                <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.material}</p>
-                </TableCell>                              
-                <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
-                </TableCell>                
-                <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.informacion}</p>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-4">
-                    <Button layout="link" size="icon" aria-label="Edit" onClick={openModalEditarProducto}>
-                      <EditIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                    <Button layout="link" size="icon" aria-label="Delete" onClick={alertEliminadoProducto}>
-                      <TrashIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                  </div>
-                </TableCell>                
-               
-             
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-   
-        </TableContainer> 
-      <form action='' onSubmit={validacionFormularioEditarProducto}>   
-      <Modal isOpen={isModalOpenEditarProducto} onClose={closeModalEditarProducto}>
-        <ModalHeader className='mb-3'>Editar producto</ModalHeader>
-        <ModalBody>          
-            <Label className="mt-4">
-              <span>Nombre</span>
-              <Input2 placeholder={"ingrese un nombre"} className="mt-1" estado={nombre} type={"text"}  cambiarEstado={cambiarNombre} expresionRegular={expresionesProducto.nombre} mensajeError={"El nombre no puede tener caracteres especiales"} />                
-            </Label>          
-            <Label className="mt-4">
-            <span>Tipo</span>
-              <Select className="mt-1">
-                <option>3D</option>
-                <option>A mano</option>
-                <option>Vaceado</option>
-              </Select>
-            </Label>
-            <Label className="mt-4">
-              <span>peso</span>
-              <Input2 placeholder={"ingrese un peso en gramos"} className="mt-1" estado={peso} type={"number"}  cambiarEstado={cambiarPeso} expresionRegular={expresionesProducto.peso} mensajeError={"No puede ingresar letras"} />                
-            </Label>
-            <Label className="mt-4">
-              <span>Tamaño anillo</span>
-              <Input2 placeholder={"ingrese un numero"} className="mt-1" estado={tamanoAnillo} type={"number"}  cambiarEstado={cambiarTamanoAnillo} expresionRegular={expresionesProducto.tamanoAnillo} mensajeError={"La medida no puede tener letras"} />                
-            </Label>    
-            <Label className="mt-4">
-              <span>Tamaño piedra</span>
-              <Input2 placeholder={"ingrese un numero en mm"} className="mt-1" estado={tamanoPiedra} type={"number"}  cambiarEstado={cambiarTamanoPiedra} expresionRegular={expresionesProducto.tamanoPiedra} mensajeError={"el numero no puede tener letras"} />                
-            </Label>
-            <Label className="mt-4">
-            <span>Material</span>
-              <Select className="mt-1">
-                <option>Oro</option>
-                <option>Oro rosado</option>
-                <option>Plata</option>
-                <option>Oro 750</option>
-              </Select>
-            </Label>
-            <Label className="mt-4">
-              <span>Detalle</span>
-              <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
-            </Label>
-            <Label className="mt-4">
-              <span>informacion</span>
-              <Input2 placeholder={"ingrese la informacion o motivo de devolucion"} className="mt-1" estado={informacion} type={"text"}  cambiarEstado={cambiarInformacion} expresionRegular={expresionesProducto.informacion} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
-            </Label>    
-           
-        </ModalBody>
-
-        <ModalFooter>          
-          <div className="hidden sm:block">
-            <Button layout="outline" onClick={closeModalEditarProducto}>
-              Cancelar
-            </Button>
-          </div>
-          <div className="hidden sm:block">
-            <Button onClick={validacionFormularioEditarProducto}>Editar producto</Button>
-          </div>
+            <div >
+    <TableContainer >
+       <Table >
+         <TableHeader>
+           <tr >
+             <TableCell>ID</TableCell>
+             <TableCell>Nombre anillo</TableCell>
+             <TableCell>Tipo</TableCell>
+             <TableCell>Peso</TableCell>
+             <TableCell>Tamaño anillo</TableCell>
+             <TableCell>Tamaño piedra</TableCell>
+             <TableCell>Material</TableCell>
+             <TableCell>Detalle</TableCell>
+             <TableCell>Informacion adicional</TableCell>
+             <TableCell>acciones</TableCell>
+           </tr>
+         </TableHeader>
+         <TableBody className="w-12">
+           {dataTable3.map((producto, i) => (
+             <TableRow key={i}>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.ID}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.nombre}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tipo}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.peso}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoAnillo}</p>
+               </TableCell>                
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoPiedra}</p>
+               </TableCell>                
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.material}</p>
+               </TableCell>                              
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
+               </TableCell>                
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.informacion}</p>
+               </TableCell>
+               <TableCell>
+                 <div className="flex items-center space-x-4">
+                   <Button layout="link" size="icon" aria-label="Edit" onClick={openModalEditarProducto}>
+                     <EditIcon className="w-5 h-5" aria-hidden="true" />
+                   </Button>
+                   <Button layout="link" size="icon" aria-label="Delete" onClick={alertEliminadoProducto}>
+                     <TrashIcon className="w-5 h-5" aria-hidden="true" />
+                   </Button>
+                 </div>
+               </TableCell>                
+              
+            
+             </TableRow>
+           ))}
+         </TableBody>
+       </Table>
+  
+       </TableContainer> 
+     <form action='' onSubmit={validacionFormularioEditarProducto}>   
+     <Modal isOpen={isModalOpenEditarProducto} onClose={closeModalEditarProducto}>
+       <ModalHeader className='mb-3'>Editar producto</ModalHeader>
+       <ModalBody>          
+           <Label className="mt-4">
+             <span>Nombre</span>
+             <Input2 placeholder={"ingrese un nombre"} className="mt-1" estado={nombre} type={"text"}  cambiarEstado={cambiarNombre} expresionRegular={expresionesProducto.nombre} mensajeError={"El nombre no puede tener caracteres especiales"} />                
+           </Label>          
+           <Label className="mt-4">
+           <span>Tipo</span>
+             <Select className="mt-1">
+               <option>3D</option>
+               <option>A mano</option>
+               <option>Vaceado</option>
+             </Select>
+           </Label>
+           <Label className="mt-4">
+             <span>peso</span>
+             <Input2 placeholder={"ingrese un peso en gramos"} className="mt-1" estado={peso} type={"number"}  cambiarEstado={cambiarPeso} expresionRegular={expresionesProducto.peso} mensajeError={"No puede ingresar letras"} />                
+           </Label>
+           <Label className="mt-4">
+             <span>Tamaño anillo</span>
+             <Input2 placeholder={"ingrese un numero"} className="mt-1" estado={tamanoAnillo} type={"number"}  cambiarEstado={cambiarTamanoAnillo} expresionRegular={expresionesProducto.tamanoAnillo} mensajeError={"La medida no puede tener letras"} />                
+           </Label>    
+           <Label className="mt-4">
+             <span>Tamaño piedra</span>
+             <Input2 placeholder={"ingrese un numero en mm"} className="mt-1" estado={tamanoPiedra} type={"number"}  cambiarEstado={cambiarTamanoPiedra} expresionRegular={expresionesProducto.tamanoPiedra} mensajeError={"el numero no puede tener letras"} />                
+           </Label>
+           <Label className="mt-4">
+           <span>Material</span>
+             <Select className="mt-1">
+               <option>Oro</option>
+               <option>Oro rosado</option>
+               <option>Plata</option>
+               <option>Oro 750</option>
+             </Select>
+           </Label>
+           <Label className="mt-4">
+             <span>Detalle</span>
+             <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
+           </Label>
+           <Label className="mt-4">
+             <span>informacion</span>
+             <Input2 placeholder={"ingrese la informacion o motivo de devolucion"} className="mt-1" estado={informacion} type={"text"}  cambiarEstado={cambiarInformacion} expresionRegular={expresionesProducto.informacion} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
+           </Label>    
           
-          <div className="block w-full sm:hidden">
-            <Button block size="large" layout="outline" onClick={closeModalEditarProducto}>
-              Cancel
-            </Button>
-          </div>
-          <div className="block w-full sm:hidden">
-            <Button block size="large">
-              Accept
-            </Button>
-          </div>
+       </ModalBody>
 
+       <ModalFooter>          
+         <div className="hidden sm:block">
+           <Button layout="outline" onClick={closeModalEditarProducto}>
+             Cancelar
+           </Button>
+         </div>
+         <div className="hidden sm:block">
+           <Button onClick={validacionFormularioEditarProducto}>Editar producto</Button>
+         </div>
          
-        </ModalFooter>
-      </Modal>
-      </form>
+         <div className="block w-full sm:hidden">
+           <Button block size="large" layout="outline" onClick={closeModalEditarProducto}>
+             Cancel
+           </Button>
+         </div>
+         <div className="block w-full sm:hidden">
+           <Button block size="large">
+             Accept
+           </Button>
+         </div>
+
+        
+       </ModalFooter>
+     </Modal>
+     </form>
+ </div> 
            
         </ModalBody>
 
@@ -611,6 +619,145 @@ function Pedidos() {
             +
           </span>
         </Button>
+        <div >
+    <TableContainer >
+       <Table >
+         <TableHeader>
+           <tr >
+             <TableCell>ID</TableCell>
+             <TableCell>Nombre anillo</TableCell>
+             <TableCell>Tipo</TableCell>
+             <TableCell>Peso</TableCell>
+             <TableCell>Tamaño anillo</TableCell>
+             <TableCell>Tamaño piedra</TableCell>
+             <TableCell>Material</TableCell>
+             <TableCell>Detalle</TableCell>
+             <TableCell>Informacion adicional</TableCell>
+             <TableCell>acciones</TableCell>
+           </tr>
+         </TableHeader>
+         <TableBody className="w-12">
+           {dataTable3.map((producto, i) => (
+             <TableRow key={i}>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.ID}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.nombre}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tipo}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.peso}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoAnillo}</p>
+               </TableCell>                
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoPiedra}</p>
+               </TableCell>                
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.material}</p>
+               </TableCell>                              
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
+               </TableCell>                
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.informacion}</p>
+               </TableCell>
+               <TableCell>
+                 <div className="flex items-center space-x-4">
+                   <Button layout="link" size="icon" aria-label="Edit" onClick={openModalEditarProducto}>
+                     <EditIcon className="w-5 h-5" aria-hidden="true" />
+                   </Button>
+                   <Button layout="link" size="icon" aria-label="Delete" onClick={alertEliminadoProducto}>
+                     <TrashIcon className="w-5 h-5" aria-hidden="true" />
+                   </Button>
+                 </div>
+               </TableCell>                
+              
+            
+             </TableRow>
+           ))}
+         </TableBody>
+       </Table>
+  
+       </TableContainer> 
+     <form action='' onSubmit={validacionFormularioEditarProducto}>   
+     <Modal isOpen={isModalOpenEditarProducto} onClose={closeModalEditarProducto}>
+       <ModalHeader className='mb-3'>Editar producto</ModalHeader>
+       <ModalBody>          
+           <Label className="mt-4">
+             <span>Nombre</span>
+             <Input2 placeholder={"ingrese un nombre"} className="mt-1" estado={nombre} type={"text"}  cambiarEstado={cambiarNombre} expresionRegular={expresionesProducto.nombre} mensajeError={"El nombre no puede tener caracteres especiales"} />                
+           </Label>          
+           <Label className="mt-4">
+           <span>Tipo</span>
+             <Select className="mt-1">
+               <option>3D</option>
+               <option>A mano</option>
+               <option>Vaceado</option>
+             </Select>
+           </Label>
+           <Label className="mt-4">
+             <span>peso</span>
+             <Input2 placeholder={"ingrese un peso en gramos"} className="mt-1" estado={peso} type={"number"}  cambiarEstado={cambiarPeso} expresionRegular={expresionesProducto.peso} mensajeError={"No puede ingresar letras"} />                
+           </Label>
+           <Label className="mt-4">
+             <span>Tamaño anillo</span>
+             <Input2 placeholder={"ingrese un numero"} className="mt-1" estado={tamanoAnillo} type={"number"}  cambiarEstado={cambiarTamanoAnillo} expresionRegular={expresionesProducto.tamanoAnillo} mensajeError={"La medida no puede tener letras"} />                
+           </Label>    
+           <Label className="mt-4">
+             <span>Tamaño piedra</span>
+             <Input2 placeholder={"ingrese un numero en mm"} className="mt-1" estado={tamanoPiedra} type={"number"}  cambiarEstado={cambiarTamanoPiedra} expresionRegular={expresionesProducto.tamanoPiedra} mensajeError={"el numero no puede tener letras"} />                
+           </Label>
+           <Label className="mt-4">
+           <span>Material</span>
+             <Select className="mt-1">
+               <option>Oro</option>
+               <option>Oro rosado</option>
+               <option>Plata</option>
+               <option>Oro 750</option>
+             </Select>
+           </Label>
+           <Label className="mt-4">
+             <span>Detalle</span>
+             <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
+           </Label>
+           <Label className="mt-4">
+             <span>informacion</span>
+             <Input2 placeholder={"ingrese la informacion o motivo de devolucion"} className="mt-1" estado={informacion} type={"text"}  cambiarEstado={cambiarInformacion} expresionRegular={expresionesProducto.informacion} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
+           </Label>    
+          
+       </ModalBody>
+
+       <ModalFooter>          
+         <div className="hidden sm:block">
+           <Button layout="outline" onClick={closeModalEditarProducto}>
+             Cancelar
+           </Button>
+         </div>
+         <div className="hidden sm:block">
+           <Button onClick={validacionFormularioEditarProducto}>Editar producto</Button>
+         </div>
+         
+         <div className="block w-full sm:hidden">
+           <Button block size="large" layout="outline" onClick={closeModalEditarProducto}>
+             Cancel
+           </Button>
+         </div>
+         <div className="block w-full sm:hidden">
+           <Button block size="large">
+             Accept
+           </Button>
+         </div>
+
+        
+       </ModalFooter>
+     </Modal>
+     </form>
+ </div> 
       <form action='' onSubmit={validacionFormularioProducto}>   
       <Modal isOpen={isModalOpenProducto} onClose={closeModalProducto}>
         <ModalHeader className='mb-3'>Agregar producto</ModalHeader>

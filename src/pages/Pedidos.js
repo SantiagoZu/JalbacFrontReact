@@ -73,6 +73,7 @@ function Pedidos() {
 
    function openModalEditarProducto() {
      setIsModalOpenEditarProducto(true)
+     cambiarMotivoDevolucion({ campo: '', valido: null, desactivado : true })
    }
  
    function closeModalEditarProducto() {
@@ -159,6 +160,7 @@ function Pedidos() {
       /* Validación formulario */
 
   const [cliente, cambiarCliente] = useState({ campo: '', valido: null });
+ // const [estadoPedido, cambiarEstadoPedido] = useState({ campo: '', valido: null, desactivado: true });
   
   const [formularioValido, cambiarFormularioValido] = useState(null);
   const [formularioValidoProducto, cambiarFormularioValidoProducto] = useState(null);
@@ -180,7 +182,7 @@ function Pedidos() {
 
  const alertEditadoCorrecto = (p) => {
     Swal.fire({
-      title: p + " editado correctamente",
+      title: p + " correctamente",
       icon: "success"
     })
       .then((value) => {
@@ -215,10 +217,10 @@ function Pedidos() {
     })
   }
   
-  let motivoConfirmado = false
-  const alertDevuelto = () => {
+
+  const alertDevuelto = (p) => {
     Swal.fire({
-      title: '¿Estás seguro que deseas cambiar el estado del producto a devuelto?',
+      title: `¿Estás seguro que deseas cambiar el estado del ${p} a devuelto?`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -227,15 +229,13 @@ function Pedidos() {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire(
-          '¡Eliminado!',
-          'El pedido se ha eliminado correctamente.' + result.value,
+          'Modificado!',
+          'El estado se ha editado correctamente.',
           'success'
         )
-        motivoConfirmado = true
-        //mostrarMotivo()
+        cambiarMotivoDevolucion({ campo: '', valido: false, desactivado: false });
       }
-    })
-    
+    })    
   }
   const alertEliminadoProducto = () => {
     Swal.fire({
@@ -258,12 +258,15 @@ function Pedidos() {
 
   const validacionFormulario = (e) => {
     e.preventDefault();
-    if (cliente.valido === 'true'  && comparaFechas(document.getElementById("fechaEditar").value)  ) {
+    if (cliente.valido === 'true'  && comparaFechas(document.getElementById("fechaEditar").value)  && motivoDevolucion.valido  === true) {
       
       cambiarFormularioValido(true);
       cambiarCliente({ campo: '', valido: null });
+     if(motivoDevolucion.valido) {
+       alertEditadoCorrecto("Pedido agregado");
+      }
+      alertEditadoCorrecto("Pedido editado");
 
-      alertEditadoCorrecto("Pedido");
 
     } else {
       cambiarFormularioValido(false);
@@ -277,17 +280,17 @@ function Pedidos() {
   const [tamanoAnillo, cambiarTamanoAnillo] = useState({ campo: '', valido: null });
   const [tamanoPiedra, cambiarTamanoPiedra] = useState({ campo: '', valido: null });
   const [detalle, cambiarDetalle] = useState({ campo: '', valido: null });
-  const [motivoDevolucion, cambiarMotivoDevolucion] = useState({ campo: '', valido: null });
-  //const inputMotivo = document.querySelector("#inputMotivo")
+  const [motivoDevolucion, cambiarMotivoDevolucion] = useState({ campo: '', valido: true, desactivado : true });
+  
 
-
+  
   const expresionesProducto = {
     nombre: /^[A-Za-z0-9 ]+$/, // no caracteres especiales
     peso: /^\d+(\.\d{1,12})?$/,     ///^.{4,12}$/ de 4 a 12 digitos decimal
     tamanoAnillo: /^\d+(\.\d{1,12})?$/,     ///^.{4,12}$/ de 4 a 12 digitos
     tamanoPiedra: /^\d+(\.\d{1,12})?$/,     ///^.{4,12}$/ de 4 a 12 digitos
-    detalle: /^[A-Za-z0-9]{0,200}$/, 
-    motivoDevolucion: /^[A-Za-z0-9]{0,200}$/,     // solo acepta de 0 a 200 caracteres
+    detalle: /^[A-Za-z0-9]{0,100}$/, 
+    motivoDevolucion: /^[A-Za-z0-9]{0,100}$/,     // solo acepta de 0 a 200 caracteres
     
   }
   const validacionFormularioProducto = (e) => {
@@ -300,8 +303,8 @@ function Pedidos() {
       cambiarTamanoAnillo({ campo: '', valido: null });
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
-      
-      alertEditadoCorrecto("Producto");
+      cambiarMotivoDevolucion({ campo: '', valido: null, desactivado: true });
+      alertEditadoCorrecto("Producto editado");
 
     } else {
       cambiarFormularioValidoProducto(false);
@@ -310,7 +313,7 @@ function Pedidos() {
   }
   const validacionFormularioEditarProducto = (e) => {
     e.preventDefault();
-    if (nombre.valido  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && motivoDevolucion.valido) {
+    if (nombre.valido  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && motivoDevolucion.valido === 'true') {
       
       cambiarFormularioValidoEditarProducto(true);
       cambiarNombre({ campo: '', valido: null });
@@ -319,28 +322,16 @@ function Pedidos() {
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
       cambiarMotivoDevolucion({ campo: '', valido: null });
+      
     
       
-      alertEditadoCorrecto("Producto");
+      alertEditadoCorrecto("Producto editado");
 
     } else {
       cambiarFormularioValidoEditarProducto(false);
       alertEditadoIncorrecto();
     }
   }
-  
-  /*function mostrarMotivo() {
-    if(motivoConfirmado) {
-      document.getElementById("textareaMotivo").innerHTML = motivo
-    }
-    else {
-      document.getElementById("textareaMotivo").innerHTML = ""
-    }
-  
-  }*/
-  //let motivo = ReactDOMServer.renderToStaticMarkup( <Input2 placeholder={"ingrese un nombre"} className="mt-6 mb-3" estado={motivoDevolucion} type={"text"}  cambiarEstado={cambiarMotivoDevolucion} expresionRegular={expresionesProducto.motivoDevolucion} mensajeError={"El nombre no puede tener caracteres especiales"} /> )
-  let mostrarMotivo = false
-  let estilo = "none"
   return (
     <>
       <PageTitle>Pedidos</PageTitle>
@@ -372,6 +363,7 @@ function Pedidos() {
               <TableCell>ID</TableCell>
               <TableCell>Fecha Pedido</TableCell>
               <TableCell>Cliente</TableCell>
+              <TableCell>Empleado encargado</TableCell>
               <TableCell>Fecha Entrega</TableCell>
               <TableCell>Estado</TableCell>
               <TableCell>Detalles Producto</TableCell>
@@ -379,22 +371,25 @@ function Pedidos() {
             </tr>
           </TableHeader>
           <TableBody>
-            {dataTable2.map((empleado, i) => (
+            {dataTable2.map((pedido, i) => (
               <TableRow key={i}>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.ID}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.ID}</p>
                 </TableCell>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.FechaPedido}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.FechaPedido}</p>
                 </TableCell>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Cliente}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.Cliente}</p>
                 </TableCell>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.FechaEntrega}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.EmpleadosAsignado}</p>
                 </TableCell>
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Estado}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.FechaEntrega}</p>
+                </TableCell>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{pedido.Estado}</p>
                 </TableCell>                
                 <TableCell >
                   <Button layout="link"  className='ml-6 mr-6 pr-5' size="icon" aria-label="Edit" onClick={openModalVerDetalle}>
@@ -440,13 +435,35 @@ function Pedidos() {
               </div>
             </Label>
             <Label className="mt-4">
-            <span>Estado</span>
-              <Select className="mb-6">
-                <option>En produccion</option>
-                <option>Devuelto</option>
-                <option>Entregado</option>
+              <span>Asignar empleado</span>
+              <Select>
+                <option>Josue</option>
+                <option>Barreto</option>
+                <option>Portela</option>
               </Select>
             </Label>
+            <Label className="mt-4">
+           <span >Estado</span>
+             <Select onChange={(dato) => {
+                if(dato.target.value == "Devuelto") {
+                  alertDevuelto("pedido")
+                  
+                }
+                else {
+                  cambiarMotivoDevolucion({ campo: '', valido: true, desactivado: true });
+                }
+             }}>
+               <option>En produccion</option>
+               <option >Devuelto</option>
+               <option>Entregado</option>            
+             </Select>
+           </Label>
+           <Label className='mt-4' >
+              <span>Motivo devolucion</span>
+              <Input2 placeholder={"ingrese motivo"} className="mt-1" estado={motivoDevolucion} type={"text"}  cambiarEstado={cambiarMotivoDevolucion} expresionRegular={expresionesProducto.motivoDevolucion} mensajeError={"el texto no puede  contener mas de 100 caracteres"} desactivado={motivoDevolucion.desactivado} />        
+           </Label>
+         
+              
             <div >
     <TableContainer >
        <Table >
@@ -460,6 +477,7 @@ function Pedidos() {
              <TableCell>Tamaño piedra</TableCell>
              <TableCell>Material</TableCell>
              <TableCell>Detalle</TableCell>
+             <TableCell>Empleado encargado</TableCell>
              <TableCell>Estado</TableCell>
              <TableCell>Motivo devolucion</TableCell>
              <TableCell>acciones</TableCell>
@@ -493,6 +511,9 @@ function Pedidos() {
                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
                </TableCell>  
                <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.empleadoAsignado}</p>
+               </TableCell>  
+               <TableCell>
                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.estado}</p>
                </TableCell>                                      
                <TableCell>
@@ -521,7 +542,7 @@ function Pedidos() {
        <ModalHeader className='mb-3'>Editar producto</ModalHeader>
        <ModalBody>          
            <Label className="mt-4">
-             <span>Nombreaaaa</span>
+             <span>Nombre</span>
              <Input2  placeholder={"ingrese un nombre"} className="mt-1" estado={nombre} type={"text"}  cambiarEstado={cambiarNombre} expresionRegular={expresionesProducto.nombre} mensajeError={"El nombre no puede tener caracteres especiales"} />                
            </Label>          
            <Label className="mt-4">
@@ -533,7 +554,7 @@ function Pedidos() {
              </Select>
            </Label>
            <Label className="mt-4">
-             <span>peso</span>
+             <span>Peso</span>
              <Input2 placeholder={"ingrese un peso en gramos"} className="mt-1" estado={peso} type={"number"}  cambiarEstado={cambiarPeso} expresionRegular={expresionesProducto.peso} mensajeError={"No puede ingresar letras"} />                
            </Label>
            <Label className="mt-4">
@@ -554,15 +575,26 @@ function Pedidos() {
              </Select>
            </Label>
            <Label className="mt-4">
-             <span>Detalle</span>
-             <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
+             <span>Detalles</span>
+             <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 100 caracteres"} />                
            </Label>
+           <Label className="mt-4">
+              <span>Asignar empleado</span>
+              <Select>
+                <option>Josue</option>
+                <option>Barreto</option>
+                <option>Portela</option>
+              </Select>
+            </Label>
            <Label className="mt-4">
            <span >Estado</span>
              <Select className="mt-1" onChange={(dato) => {
                 if(dato.target.value == "Devuelto") {
-                  alertDevuelto()
+                  alertDevuelto("producto")
                   
+                }
+                else {
+                  cambiarMotivoDevolucion({ campo: '', valido: "true", desactivado: true });
                 }
              }}>
                <option>En produccion</option>
@@ -572,7 +604,7 @@ function Pedidos() {
            </Label>
            <label className="block text-sm text-gray-700 dark:text-gray-400" >
               <span>Motivo devolucion</span>
-              <Input2 placeholder={"ingrese motivo"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} desactivado={true} />        
+              <Input2 placeholder={"ingrese motivo"} className="mt-1" estado={motivoDevolucion} type={"text"}  cambiarEstado={cambiarMotivoDevolucion} expresionRegular={expresionesProducto.motivoDevolucion} mensajeError={"el texto no puede  contener mas de 100 caracteres"} desactivado={motivoDevolucion.desactivado} />        
            </label>
          
           
@@ -614,7 +646,7 @@ function Pedidos() {
             </Button>
           </div>
           <div className="hidden sm:block">
-            <Button onClick={validacionFormulario}>Enviar</Button>
+            <Button onClick={validacionFormulario}>Enviaraaaaa</Button>
           </div>
 
           <div className="block w-full sm:hidden">
@@ -652,15 +684,16 @@ function Pedidos() {
               </div>
             </Label>
             <Label className="mt-4">
-              <span>Estado</span>
-              
-              <Select className="mb-6">
-                <option>En produccion</option>
-                <option>Devuelto</option>
-                <option>Entregado</option>
+              <span>Asignar empleado</span>
+              <Select>
+                <option>Josue</option>
+                <option>Barreto</option>
+                <option>Portela</option>
               </Select>
             </Label>
-            <Button onClick={openModalProducto} className="mb-4">
+            
+         
+            <Button onClick={openModalProducto} className="mb-4 mt-4">
           Agregar producto
           <span className="mb-1" aria-hidden="true">
             +
@@ -679,6 +712,7 @@ function Pedidos() {
              <TableCell>Tamaño piedra</TableCell>
              <TableCell>Material</TableCell>
              <TableCell>Detalle</TableCell>
+             <TableCell>Empleado encargado</TableCell>
              <TableCell>Motivo devolucion</TableCell>
              <TableCell>acciones</TableCell>
            </tr>
@@ -709,6 +743,9 @@ function Pedidos() {
                </TableCell>                              
                <TableCell>
                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
+               </TableCell>                
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.empleadoAsignado}</p>
                </TableCell>                
                <TableCell>
                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.motivoDevolucion}</p>
@@ -770,7 +807,15 @@ function Pedidos() {
            <Label className="mt-4">
              <span>Detalle</span>
              <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
-           </Label>                         
+           </Label>   
+           <Label className="mt-4">
+              <span>Asignar empleado</span>
+              <Select>
+                <option>Josue</option>
+                <option>Barreto</option>
+                <option>Portela</option>
+              </Select>
+            </Label>                      
           
        </ModalBody>
 
@@ -781,7 +826,7 @@ function Pedidos() {
            </Button>
          </div>
          <div className="hidden sm:block">
-           <Button onClick={validacionFormularioEditarProducto}>Editar producto</Button>
+           <Button onClick={validacionFormularioEditarProducto}>Agregar producto</Button>
          </div>
          
          <div className="block w-full sm:hidden">
@@ -838,7 +883,7 @@ function Pedidos() {
             </Label>
             <Label className="mt-4">
               <span>Detalle</span>
-              <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede ser contener mas de 200 caracteres"} />                
+              <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede ser contener mas de 100 caracteres"} />                
             </Label>    
            
         </ModalBody>
@@ -875,7 +920,7 @@ function Pedidos() {
             </Button>
           </div>
           <div className="hidden sm:block">
-            <Button onClick={validacionFormulario}>Enviar</Button>
+            <Button onClick={validacionFormulario}>Enviaroooooo</Button>
           </div>
 
           <div className="block w-full sm:hidden">
@@ -923,6 +968,7 @@ function Pedidos() {
               <TableCell>Tamaño piedra</TableCell>
               <TableCell>Material</TableCell>
               <TableCell>Detalle</TableCell>
+              <TableCell>Empleado encargado</TableCell>
               <TableCell>Motivo devolucion</TableCell>
             </tr>
           </TableHeader>
@@ -952,6 +998,9 @@ function Pedidos() {
                 </TableCell>                              
                 <TableCell>
                     <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.empleadoAsignado}</p>
                 </TableCell>                
                 <TableCell>
                     <p className="text-xs text-gray-600 dark:text-gray-400">{producto.motivoDevolucion}</p>

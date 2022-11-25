@@ -5,7 +5,7 @@ import { MensajeError } from './styles/styles';
 export const Input2 = ({ placeholder, type, estado, cambiarEstado, expresionRegular, mensajeError, desactivado}) => {
 
     const onChange = (e) => {
-        cambiarEstado({ ...estado, campo: e.target.value });
+        cambiarEstado({ ...estado, campo: e.target.value, desactivado : desactivado});
     }
 
     const validacion = () => {

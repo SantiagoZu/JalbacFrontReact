@@ -228,7 +228,7 @@ function Pedidos() {
       if (result.isConfirmed) {
         Swal.fire(
           '¡Eliminado!',
-          'El pedido se ha eliminado correctamente.' + result.value,
+          'El producto se ha editado correctamente',
           'success'
         )
         motivoConfirmado = true
@@ -318,6 +318,7 @@ function Pedidos() {
   const validacionFormularioEditarProducto = (e) => {
     e.preventDefault();
     if (nombre.valido  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && motivoDevolucion.valido ) {
+      
       
       cambiarFormularioValidoEditarProducto(true);
       cambiarNombre({ campo: '', valido: null });

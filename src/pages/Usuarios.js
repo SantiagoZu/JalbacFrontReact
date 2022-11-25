@@ -186,7 +186,7 @@ function Usuario() {
         <Table>
           <TableHeader>
             <tr >
-              <TableCell>ID</TableCell>
+              <TableCell>IdUsuario</TableCell>
               <TableCell>Rol</TableCell>
               <TableCell>Correo</TableCell>
               <TableCell>Estado</TableCell>

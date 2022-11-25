@@ -28,7 +28,7 @@ import Swal from 'sweetalert2'
 
 const response2 = response.concat([])
 
-function Empleados() {
+function Historial() {
 
   const [pageTable2, setPageTable2] = useState(1)
 
@@ -147,11 +147,7 @@ function Empleados() {
   
   return (
     <>
-      <PageTitle>Empleados</PageTitle>
-
-
-
-      <SectionTitle>Tabla empleados</SectionTitle>
+      <PageTitle>Historial estados del pedido</PageTitle>
 
       <div className="flex ml-auto mb-6">
         <div className="flex justify-center flex-1 ml-5">
@@ -324,4 +320,4 @@ function Empleados() {
   )
 }
 
-export default Empleados
+export default Historial

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import ReactDOMServer from 'react-dom/server';
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import { Modal, ModalHeader, ModalBody, ModalFooter,   } from '@windmill/react-ui';
@@ -232,7 +232,7 @@ function Pedidos() {
           'success'
         )
         motivoConfirmado = true
-        mostrarMotivo()
+        //mostrarMotivo()
       }
     })
     
@@ -278,22 +278,16 @@ function Pedidos() {
   const [tamanoPiedra, cambiarTamanoPiedra] = useState({ campo: '', valido: null });
   const [detalle, cambiarDetalle] = useState({ campo: '', valido: null });
   const [motivoDevolucion, cambiarMotivoDevolucion] = useState({ campo: '', valido: null });
- 
- 
- 
-  let mostrarTabla = "hidden";
-  function TablaProducto(props)  {
-    
-  }
-  
+  //const inputMotivo = document.querySelector("#inputMotivo")
+
+
   const expresionesProducto = {
     nombre: /^[A-Za-z0-9 ]+$/, // no caracteres especiales
-    peso: /^\d{1,14}$/,     ///^.{4,12}$/ de 4 a 12 digitos
-    tamanoAnillo: /^\d{1,14}$/,     ///^.{4,12}$/ de 4 a 12 digitos
-    tamanoPiedra: /^\d{1,14}$/,     ///^.{4,12}$/ de 4 a 12 digitos
-    detalle: /^[a-z]{0,200}$/, 
-    estado: /devuelto/,    // solo acepta de 0 a 200 caracteres
-    motivoDevolucion: /^[a-z]{0,200}$/,     // solo acepta de 0 a 200 caracteres
+    peso: /^\d+(\.\d{1,12})?$/,     ///^.{4,12}$/ de 4 a 12 digitos decimal
+    tamanoAnillo: /^\d+(\.\d{1,12})?$/,     ///^.{4,12}$/ de 4 a 12 digitos
+    tamanoPiedra: /^\d+(\.\d{1,12})?$/,     ///^.{4,12}$/ de 4 a 12 digitos
+    detalle: /^[A-Za-z0-9]{0,200}$/, 
+    motivoDevolucion: /^[A-Za-z0-9]{0,200}$/,     // solo acepta de 0 a 200 caracteres
     
   }
   const validacionFormularioProducto = (e) => {
@@ -306,7 +300,6 @@ function Pedidos() {
       cambiarTamanoAnillo({ campo: '', valido: null });
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
-      mostrarTabla = "";
       
       alertEditadoCorrecto("Producto");
 
@@ -317,7 +310,7 @@ function Pedidos() {
   }
   const validacionFormularioEditarProducto = (e) => {
     e.preventDefault();
-    if (nombre.valido  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && motivoDevolucion.valido ) {
+    if (nombre.valido  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && motivoDevolucion.valido) {
       
       cambiarFormularioValidoEditarProducto(true);
       cambiarNombre({ campo: '', valido: null });
@@ -326,6 +319,7 @@ function Pedidos() {
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
       cambiarMotivoDevolucion({ campo: '', valido: null });
+    
       
       alertEditadoCorrecto("Producto");
 
@@ -334,7 +328,8 @@ function Pedidos() {
       alertEditadoIncorrecto();
     }
   }
-  function mostrarMotivo() {
+  
+  /*function mostrarMotivo() {
     if(motivoConfirmado) {
       document.getElementById("textareaMotivo").innerHTML = motivo
     }
@@ -342,17 +337,10 @@ function Pedidos() {
       document.getElementById("textareaMotivo").innerHTML = ""
     }
   
-  }
-  let motivo = `<form class="mt-2">
-  <span >Motivo devolución</span>
-  <div class="w-full mb-2 mt-2 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-      <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-          <label for="comment" class="sr-only">Your comment</label>
-          <textarea id="comment" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." style="resize:none"></textarea>
-      </div>    
-  </div>
-</form>`
-
+  }*/
+  //let motivo = ReactDOMServer.renderToStaticMarkup( <Input2 placeholder={"ingrese un nombre"} className="mt-6 mb-3" estado={motivoDevolucion} type={"text"}  cambiarEstado={cambiarMotivoDevolucion} expresionRegular={expresionesProducto.motivoDevolucion} mensajeError={"El nombre no puede tener caracteres especiales"} /> )
+  let mostrarMotivo = false
+  let estilo = "none"
   return (
     <>
       <PageTitle>Pedidos</PageTitle>
@@ -533,8 +521,8 @@ function Pedidos() {
        <ModalHeader className='mb-3'>Editar producto</ModalHeader>
        <ModalBody>          
            <Label className="mt-4">
-             <span>Nombre</span>
-             <Input2 placeholder={"ingrese un nombre"} className="mt-1" estado={nombre} type={"text"}  cambiarEstado={cambiarNombre} expresionRegular={expresionesProducto.nombre} mensajeError={"El nombre no puede tener caracteres especiales"} />                
+             <span>Nombreaaaa</span>
+             <Input2  placeholder={"ingrese un nombre"} className="mt-1" estado={nombre} type={"text"}  cambiarEstado={cambiarNombre} expresionRegular={expresionesProducto.nombre} mensajeError={"El nombre no puede tener caracteres especiales"} />                
            </Label>          
            <Label className="mt-4">
            <span>Tipo</span>
@@ -574,6 +562,7 @@ function Pedidos() {
              <Select className="mt-1" onChange={(dato) => {
                 if(dato.target.value == "Devuelto") {
                   alertDevuelto()
+                  
                 }
              }}>
                <option>En produccion</option>
@@ -581,7 +570,10 @@ function Pedidos() {
                <option>Entregado</option>            
              </Select>
            </Label>
-           <div id="textareaMotivo"></div>
+           <label className="block text-sm text-gray-700 dark:text-gray-400" >
+              <span>Motivo devolucion</span>
+              <Input2 placeholder={"ingrese motivo"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} desactivado={true} />        
+           </label>
          
           
        </ModalBody>

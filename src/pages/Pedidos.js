@@ -25,6 +25,7 @@ import { EditIcon, TrashIcon, SearchIcon } from '../icons';
 import { Input2 } from '../components/Input';
 import response from '../utils/demo/dataPedidos'
 import responseDetalles from '../utils/demo/dataProductos'
+import { hacker } from 'faker/lib/locales/en';
 const response2 = response.concat([])
 const responseDetallesProductos = responseDetalles.concat([])
 
@@ -213,6 +214,29 @@ function Pedidos() {
       }
     })
   }
+  
+  let motivoConfirmado = false
+  const alertDevuelto = () => {
+    Swal.fire({
+      title: '¿Estás seguro que deseas cambiar el estado del producto a devuelto?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '¡Sí, cambiar!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          '¡Eliminado!',
+          'El pedido se ha eliminado correctamente.' + result.value,
+          'success'
+        )
+        motivoConfirmado = true
+        mostrarMotivo()
+      }
+    })
+    
+  }
   const alertEliminadoProducto = () => {
     Swal.fire({
       title: '¿Estás seguro que deseas eliminar el producto?',
@@ -220,7 +244,7 @@ function Pedidos() {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: '¡Sí, eliminar!'
+      confirmButtonText: '¡Sí, eliminar!',      
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire(
@@ -253,7 +277,7 @@ function Pedidos() {
   const [tamanoAnillo, cambiarTamanoAnillo] = useState({ campo: '', valido: null });
   const [tamanoPiedra, cambiarTamanoPiedra] = useState({ campo: '', valido: null });
   const [detalle, cambiarDetalle] = useState({ campo: '', valido: null });
-  const [informacion, cambiarInformacion] = useState({ campo: '', valido: null });
+  const [motivoDevolucion, cambiarMotivoDevolucion] = useState({ campo: '', valido: null });
  
  
  
@@ -267,8 +291,9 @@ function Pedidos() {
     peso: /^\d{1,14}$/,     ///^.{4,12}$/ de 4 a 12 digitos
     tamanoAnillo: /^\d{1,14}$/,     ///^.{4,12}$/ de 4 a 12 digitos
     tamanoPiedra: /^\d{1,14}$/,     ///^.{4,12}$/ de 4 a 12 digitos
-    detalle: /^[a-z]{0,200}$/,     // solo acepta de 0 a 200 caracteres
-    informacion: /^[a-z]{0,200}$/,     // solo acepta de 0 a 200 caracteres
+    detalle: /^[a-z]{0,200}$/, 
+    estado: /devuelto/,    // solo acepta de 0 a 200 caracteres
+    motivoDevolucion: /^[a-z]{0,200}$/,     // solo acepta de 0 a 200 caracteres
     
   }
   const validacionFormularioProducto = (e) => {
@@ -282,7 +307,7 @@ function Pedidos() {
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
       mostrarTabla = "";
-      alert("gol")
+      
       alertEditadoCorrecto("Producto");
 
     } else {
@@ -292,7 +317,7 @@ function Pedidos() {
   }
   const validacionFormularioEditarProducto = (e) => {
     e.preventDefault();
-    if (nombre.valido  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && informacion.valido ) {
+    if (nombre.valido  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && motivoDevolucion.valido ) {
       
       cambiarFormularioValidoEditarProducto(true);
       cambiarNombre({ campo: '', valido: null });
@@ -300,7 +325,7 @@ function Pedidos() {
       cambiarTamanoAnillo({ campo: '', valido: null });
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
-      cambiarInformacion({ campo: '', valido: null });
+      cambiarMotivoDevolucion({ campo: '', valido: null });
       
       alertEditadoCorrecto("Producto");
 
@@ -309,7 +334,25 @@ function Pedidos() {
       alertEditadoIncorrecto();
     }
   }
+  function mostrarMotivo() {
+    if(motivoConfirmado) {
+      document.getElementById("textareaMotivo").innerHTML = motivo
+    }
+    else {
+      document.getElementById("textareaMotivo").innerHTML = ""
+    }
   
+  }
+  let motivo = `<form class="mt-2">
+  <span >Motivo devolución</span>
+  <div class="w-full mb-2 mt-2 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+      <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
+          <label for="comment" class="sr-only">Your comment</label>
+          <textarea id="comment" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." style="resize:none"></textarea>
+      </div>    
+  </div>
+</form>`
+
   return (
     <>
       <PageTitle>Pedidos</PageTitle>
@@ -431,7 +474,8 @@ function Pedidos() {
              <TableCell>Tamaño piedra</TableCell>
              <TableCell>Material</TableCell>
              <TableCell>Detalle</TableCell>
-             <TableCell>Informacion adicional</TableCell>
+             <TableCell>Estado</TableCell>
+             <TableCell>Motivo devolucion</TableCell>
              <TableCell>acciones</TableCell>
            </tr>
          </TableHeader>
@@ -461,9 +505,12 @@ function Pedidos() {
                </TableCell>                              
                <TableCell>
                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
-               </TableCell>                
+               </TableCell>  
                <TableCell>
-                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.informacion}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{producto.estado}</p>
+               </TableCell>                                      
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.motivoDevolucion}</p>
                </TableCell>
                <TableCell>
                  <div className="flex items-center space-x-4">
@@ -517,7 +564,7 @@ function Pedidos() {
                <option>Oro</option>
                <option>Oro rosado</option>
                <option>Plata</option>
-               <option>Oro 750</option>
+          
              </Select>
            </Label>
            <Label className="mt-4">
@@ -525,9 +572,19 @@ function Pedidos() {
              <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
            </Label>
            <Label className="mt-4">
-             <span>informacion</span>
-             <Input2 placeholder={"ingrese la informacion o motivo de devolucion"} className="mt-1" estado={informacion} type={"text"}  cambiarEstado={cambiarInformacion} expresionRegular={expresionesProducto.informacion} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
-           </Label>    
+           <span >Estado</span>
+             <Select className="mt-1" onChange={(dato) => {
+                if(dato.target.value == "Devuelto") {
+                  alertDevuelto()
+                }
+             }}>
+               <option>En produccion</option>
+               <option >Devuelto</option>
+               <option>Entregado</option>            
+             </Select>
+           </Label>
+           <div id="textareaMotivo"></div>
+         
           
        </ModalBody>
 
@@ -613,9 +670,9 @@ function Pedidos() {
                 <option>Entregado</option>
               </Select>
             </Label>
-            <Button onClick={openModalProducto}>
+            <Button onClick={openModalProducto} className="mb-4">
           Agregar producto
-          <span className="ml-1" aria-hidden="true">
+          <span className="mb-1" aria-hidden="true">
             +
           </span>
         </Button>
@@ -632,7 +689,7 @@ function Pedidos() {
              <TableCell>Tamaño piedra</TableCell>
              <TableCell>Material</TableCell>
              <TableCell>Detalle</TableCell>
-             <TableCell>Informacion adicional</TableCell>
+             <TableCell>Motivo devolucion</TableCell>
              <TableCell>acciones</TableCell>
            </tr>
          </TableHeader>
@@ -664,7 +721,7 @@ function Pedidos() {
                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
                </TableCell>                
                <TableCell>
-                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.informacion}</p>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.motivoDevolucion}</p>
                </TableCell>
                <TableCell>
                  <div className="flex items-center space-x-4">
@@ -686,7 +743,7 @@ function Pedidos() {
        </TableContainer> 
      <form action='' onSubmit={validacionFormularioEditarProducto}>   
      <Modal isOpen={isModalOpenEditarProducto} onClose={closeModalEditarProducto}>
-       <ModalHeader className='mb-3'>Editar producto</ModalHeader>
+       <ModalHeader className='mb-3'>agregar producto</ModalHeader>
        <ModalBody>          
            <Label className="mt-4">
              <span>Nombre</span>
@@ -718,17 +775,12 @@ function Pedidos() {
                <option>Oro</option>
                <option>Oro rosado</option>
                <option>Plata</option>
-               <option>Oro 750</option>
              </Select>
            </Label>
            <Label className="mt-4">
              <span>Detalle</span>
              <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
-           </Label>
-           <Label className="mt-4">
-             <span>informacion</span>
-             <Input2 placeholder={"ingrese la informacion o motivo de devolucion"} className="mt-1" estado={informacion} type={"text"}  cambiarEstado={cambiarInformacion} expresionRegular={expresionesProducto.informacion} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
-           </Label>    
+           </Label>                         
           
        </ModalBody>
 
@@ -881,7 +933,7 @@ function Pedidos() {
               <TableCell>Tamaño piedra</TableCell>
               <TableCell>Material</TableCell>
               <TableCell>Detalle</TableCell>
-              <TableCell>Informacion adicional</TableCell>
+              <TableCell>Motivo devolucion</TableCell>
             </tr>
           </TableHeader>
           <TableBody className="w-12">
@@ -912,7 +964,7 @@ function Pedidos() {
                     <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
                 </TableCell>                
                 <TableCell>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.informacion}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.motivoDevolucion}</p>
                 </TableCell>                
                
              

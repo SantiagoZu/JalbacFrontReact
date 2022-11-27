@@ -233,7 +233,7 @@ function Pedidos() {
 
   const alertDevuelto = (p, formulario) => {
     Swal.fire({
-      title: `¿Estás seguro que deseas cambiar el estado del ${p} a devuelto?`,
+      title: `¿Estás seguro que deseas cambiar el estado del ${p} a devuelto? una vez cambiado el ${p} se enviará a la vista de devoluciones`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -1023,7 +1023,7 @@ function Pedidos() {
       </Modal>
       
       <Modal isOpen={isModalOpenVerDetalle} onClose={closeModalVerDetalle}  >
-        <ModalHeader className='mb-8'> detalles producto</ModalHeader>
+        <ModalHeader className='mb-8'> Detalles producto</ModalHeader>
         <ModalBody>          
         <TableContainer >
         <Table >
@@ -1037,6 +1037,7 @@ function Pedidos() {
               <TableCell>Tamaño piedra</TableCell>
               <TableCell>Material</TableCell>
               <TableCell>Detalle</TableCell>
+              <TableCell>Estado</TableCell>
               <TableCell>Empleado encargado</TableCell>
               <TableCell>Motivo devolucion</TableCell>
             </tr>
@@ -1067,6 +1068,9 @@ function Pedidos() {
                 </TableCell>                              
                 <TableCell>
                     <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.estado}</p>
                 </TableCell>                
                 <TableCell>
                     <p className="text-xs text-gray-600 dark:text-gray-400">{producto.empleadoAsignado}</p>

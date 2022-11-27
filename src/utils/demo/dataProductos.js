@@ -8,6 +8,7 @@ export default [
     tamanoPiedra: '1.3',
     material: 'oro',
     detalle: 'no tan ancho',
+    empleadoAsignado: 'Josue',
     estado: "recibido",
     motivoDevolucion: 'no se ha devuelto',
 },
@@ -20,6 +21,7 @@ export default [
     tamanoPiedra: '1.3',
     material: 'oro',
     detalle: 'no tan ancho',
+    empleadoAsignado: 'Josue',
     estado: "entregado",
     motivoDevolucion: 'no se ha devuelto',
 }

@@ -1,13 +1,13 @@
 export default [{
         ID: '1',
         Rol: 'Administrador',
-        Permisos: 'taka',
+        Permisos: 'Configuración',
         Estado: 'Activo',
     },
     {
         ID: '2',
         Rol: 'Empleado',
-        Permisos: 'teke',
+        Permisos: 'Dashboard',
         Estado: 'Activo',
     }    
 ]

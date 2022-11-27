@@ -31,9 +31,12 @@ function restablecerPassword() {
               </h1>
 
               <Label>
-                <span>Ingrese su correo</span>
-                <Input className="mt-1" placeholder="Jane Doe" />
-                <i className='mt-1'>Al siguiente correo se le enviara un link para realizar el restablecimiento y cambio de su contraseña.</i>
+                <span>Contraseña nueva</span>
+                <Input className="mt-1" placeholder="" />
+              </Label>
+              <Label className ="mt-2">
+                <span>Confirmar nueva contraseña</span>
+                <Input className="mt-1" placeholder="" />
               </Label>
 
               <Button tag={Link} to="/login" block className="mt-4">

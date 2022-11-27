@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
-
-import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
-import { Modal, ModalHeader, ModalBody, ModalFooter, } from '@windmill/react-ui';
+import ReactDOMServer from 'react-dom/server';
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
-import { MensajeErrorFormulario } from '../components/styles/styles';
+import { Modal, ModalHeader, ModalBody, ModalFooter,   } from '@windmill/react-ui';
+import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
+import CTA from '../components/CTA'
+import Swal from 'sweetalert2'
+import button2 from '../button';
+
 import {
   Table,
   TableHeader,
@@ -18,12 +21,11 @@ import {
   Button,
   Pagination,
 } from '@windmill/react-ui'
-import { EditIcon, TrashIcon } from '../icons';
-import { SearchIcon } from '../icons'
-import response from '../utils/demo/dataDevoluciones'
-import responseDetalles from '../utils/demo/dataProductos'
+import { EditIcon, TrashIcon, SearchIcon } from '../icons';
 import { Input2 } from '../components/Input';
-import Swal from 'sweetalert2'
+import response from '../utils/demo/dataPedidos'
+import responseDetalles from '../utils/demo/dataProductos'
+import { hacker } from 'faker/lib/locales/en';
 
 const response2 = response.concat([])
 
@@ -81,7 +83,18 @@ function Devoluciones() {
     setIsModalOpen2(false)
   }
 
+ /* Despliegue modal editar producto| */
+     const [isModalOpenEditarProducto, setIsModalOpenEditarProducto] = useState(false)
 
+     function openModalEditarProducto() {
+       setIsModalOpenEditarProducto(true)
+       cambiarMotivoDevolucion({ campo: '', valido: null, desactivado : true })
+     }
+   
+     function closeModalEditarProducto() {
+       setIsModalOpenEditarProducto(false)
+     }
+     
   /* Despliegue modal Crear pedido */
   const [isModalOpenCrearPedido, setIsModalOpenCrearPedido] = useState(false)
 
@@ -132,35 +145,31 @@ function Devoluciones() {
     setIsModalOpen3(false)
   }
   const [cliente, cambiarCliente] = useState({ campo: '', valido: null });
-
+  const [formularioValidoProducto, cambiarFormularioValidoProducto] = useState(null);
+  const [formularioValidoEditarProducto, cambiarFormularioValidoEditarProducto] = useState(null);
   const [formularioValido, cambiarFormularioValido] = useState(null);
 
   const expresiones = {
     cliente: /^[a-zA-ZÀ-ÿ\s]{1,25}$/, // Letras, numeros, guion y guion_bajo
-    //fechaEntrega: new RegExp(new Date().toLocaleDateString("es-CO")), // Letras y espacios, pueden llevar acentos.
-
-    //correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-    //telefono: /^\d{7,14}$/, // 7 a 14 numeros.
-    //documento: /^\d{1,10}$/ // 7 a 14 numeros.
   }
   const comparaFechas = (fecha1) => {
-    if (new Date(fecha1).toLocaleDateString() > new Date().toLocaleDateString("es-CO")) {
-
+    if(new Date(fecha1).toLocaleDateString() >= new Date().toLocaleDateString("es-CO")){
+   
       return true
     }
     else {
-
+      
       return false
     }
   }
 
-  const alertEditadoCorrecto = () => {
+ const alertEditadoCorrecto = (p) => {
     Swal.fire({
-      title: "Pedido editado correctamente",
+      title: p + " correctamente",
       icon: "success"
     })
       .then((value) => {
-        closeModal();
+        closeModalEditarProducto();
       })
   }
 
@@ -174,7 +183,7 @@ function Devoluciones() {
 
   const alertEliminado = () => {
     Swal.fire({
-      title: '¿Estás seguro que deseas eliminar el empleado?',
+      title: '¿Estás seguro que deseas eliminar el pedido?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -189,21 +198,101 @@ function Devoluciones() {
         )
       }
     })
+  }
+  
 
+  const alertDevuelto = (p) => {
+    Swal.fire({
+      title: `¿Estás seguro que deseas cambiar el estado del ${p} a devuelto?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '¡Sí, cambiar!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Modificado!',
+          'El estado se ha editado correctamente.',
+          'success'
+        )
+        cambiarMotivoDevolucion({ campo: '', valido: false, desactivado: false });
+      }
+    })    
+  }
+  const alertEliminadoProducto = () => {
+    Swal.fire({
+      title: '¿Estás seguro que deseas eliminar el producto?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '¡Sí, eliminar!',      
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          '¡Eliminado!',
+          'El producto se ha eliminado correctamente.',
+          'success'
+        )
+      }
+    })
   }
 
   const validacionFormulario = (e) => {
     e.preventDefault();
-    if (cliente.valido === 'true' && comparaFechas(document.getElementById("fechaEditar").value)) {
-
+    if (cliente.valido === 'true'  && comparaFechas(document.getElementById("fechaEditar").value)  && motivoDevolucion.valido  === true) {
+      
       cambiarFormularioValido(true);
       cambiarCliente({ campo: '', valido: null });
+     if(motivoDevolucion.valido) {
+       alertEditadoCorrecto("Pedido agregado");
+      }
+      alertEditadoCorrecto("Pedido editado");
 
-      alertEditadoCorrecto();
 
     } else {
       cambiarFormularioValido(false);
-      alertEditadoIncorrecto();
+      alertEditadoCorrecto("Pedido editado");
+    }
+  }
+  
+  
+  const [nombre, cambiarNombre] = useState({ campo: '', valido: null });
+  const [peso, cambiarPeso] = useState({ campo: '', valido: null });
+  const [tamanoAnillo, cambiarTamanoAnillo] = useState({ campo: '', valido: null });
+  const [tamanoPiedra, cambiarTamanoPiedra] = useState({ campo: '', valido: null });
+  const [detalle, cambiarDetalle] = useState({ campo: '', valido: null });
+  const [motivoDevolucion, cambiarMotivoDevolucion] = useState({ campo: '', valido: true, desactivado : true });
+  
+
+  
+  const expresionesProducto = {
+    nombre: /^[A-Za-z0-9 ]+$/, // no caracteres especiales
+    peso: /^\d+(\.\d{1,12})?$/,     ///^.{4,12}$/ de 4 a 12 digitos decimal
+    tamanoAnillo: /^\d+(\.\d{1,12})?$/,     ///^.{4,12}$/ de 4 a 12 digitos
+    tamanoPiedra: /^\d+(\.\d{1,12})?$/,     ///^.{4,12}$/ de 4 a 12 digitos
+    detalle: /^[A-Za-z0-9]{0,100}$/, 
+    motivoDevolucion: /^[A-Za-z0-9]{0,100}$/,     // solo acepta de 0 a 200 caracteres
+    
+  }
+
+  const validacionFormularioEditarProducto = (e) => {
+    e.preventDefault();
+    if (nombre.valido  &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido && motivoDevolucion.valido === 'true') {
+      
+      cambiarFormularioValidoEditarProducto(true);
+      cambiarNombre({ campo: '', valido: null });
+      cambiarPeso({ campo: '', valido: null });
+      cambiarTamanoAnillo({ campo: '', valido: null });
+      cambiarTamanoPiedra({ campo: '', valido: null });
+      cambiarDetalle({ campo: '', valido: null });
+      cambiarMotivoDevolucion({ campo: '', valido: null });
+      alertEditadoCorrecto("Producto editado");
+
+    } else {
+      cambiarFormularioValidoEditarProducto(false);
+      alertEditadoCorrecto("Producto editado");
     }
   }
 
@@ -238,7 +327,6 @@ function Devoluciones() {
               <TableCell>Fecha Entrega</TableCell>
               <TableCell>Estado</TableCell>
               <TableCell>Detalles Producto</TableCell>
-              <TableCell>Acciones</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
@@ -260,19 +348,9 @@ function Devoluciones() {
                   <p className="text-xs text-gray-600 dark:text-gray-400">{devolucion.Estado}</p>
                 </TableCell>
                 <TableCell >
-                  <Button layout="link" className='ml-6 mr-6 pr-5' size="icon" aria-label="Edit" onClick={openModalVerDetalle}>
+                  <Button layout="link" className='ml-6 mr-6 pr-5' size="icon" aria-label="Edit" onClick={openModal}>
                     <SearchIcon className="w-5 h-5 ml-6" aria-hidden="true" />
                   </Button>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-4">
-                    <Button layout="link" size="icon" aria-label="Edit" onClick={openModal}>
-                      <EditIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                    <Button layout="link" size="icon" aria-label="Delete" onClick={alertEliminado}>
-                      <TrashIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -287,56 +365,152 @@ function Devoluciones() {
           />
         </TableFooter>
       </TableContainer>
-      <form action='' onSubmit={validacionFormulario}>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <ModalHeader className='mb-3'>Editar pedido</ModalHeader>
-          <ModalBody>
-            <Label className="mt-4">
-              <span>Cliente</span>
-              <Input2 placeholder={"ingrese un cliente"} className="mt-1" estado={cliente} type={"text"} cambiarEstado={cambiarCliente} expresionRegular={expresiones.cliente} mensajeError={"El nombre no puede tener numeros"} />
-            </Label>
+      <form action='' onSubmit={validacionFormulario}>   
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <ModalHeader className='mb-3'>Editar devoluciones</ModalHeader>
+        <ModalBody>          
 
-            <Label className="mt-4">
-              <span>fecha Entrega</span>
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <input className='block w-full pl-4 mt-1 mb-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input' type="date" id="fechaEditar" />
-                <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                </div>
-              </div>
-            </Label>
-            <Label className="mt-4">
-              <span>Estado</span>
-              <Select className="mt-1">
-                <option>En produccion</option>
-                <option>Devuelto</option>
-                <option>Entregado</option>
-              </Select>
-            </Label>
 
-          </ModalBody>
 
-          <ModalFooter>
-            <div className="hidden sm:block">
-              <Button layout="outline" onClick={closeModal}>
-                Cancelar
-              </Button>
-            </div>
-            <div className="hidden sm:block">
-              <Button onClick={validacionFormulario}>Enviar</Button>
-            </div>
+         
+              
+            <div >
+    <TableContainer >
+       <Table >
+         <TableHeader>
+           <tr >
+             <TableCell>ID</TableCell>
+             <TableCell>Nombre anillo</TableCell>
+             <TableCell>Tipo</TableCell>
+             <TableCell>Peso</TableCell>
+             <TableCell>Tamaño anillo</TableCell>
+             <TableCell>Tamaño piedra</TableCell>
+             <TableCell>Material</TableCell>
+             <TableCell>Detalle</TableCell>
+             <TableCell>Empleado encargado</TableCell>
+             <TableCell>Estado</TableCell>
+             <TableCell>Motivo devolucion</TableCell>
+             <TableCell>acciones</TableCell>
+           </tr>
+         </TableHeader>
+         <TableBody className="w-12">
+           {dataTable3.map((producto, i) => (
+             <TableRow key={i}>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.ID}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.nombre}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tipo}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.peso}</p>
+               </TableCell>
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoAnillo}</p>
+               </TableCell>                
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoPiedra}</p>
+               </TableCell>                
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.material}</p>
+               </TableCell>                              
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
+               </TableCell>  
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.empleadoAsignado}</p>
+               </TableCell>  
+               <TableCell>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{producto.estado}</p>
+               </TableCell>                                      
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">{producto.motivoDevolucion}</p>
+               </TableCell>
+               <TableCell>
+                 <div className="flex items-center space-x-4">
+                   <Button layout="link" size="icon" aria-label="Edit" onClick={openModalEditarProducto}>
+                     <EditIcon className="w-5 h-5" aria-hidden="true" />
+                   </Button>
+                 </div>
+               </TableCell>                
+              
+            
+             </TableRow>
+           ))}
+         </TableBody>
+       </Table>
+  
+       </TableContainer> 
+     <form action='' onSubmit={validacionFormularioEditarProducto}>   
+     <Modal isOpen={isModalOpenEditarProducto} onClose={closeModalEditarProducto}>
+       <ModalHeader className='mb-3'>Editar producto</ModalHeader>
+       <ModalBody>          
+           <Label className="mt-4">
+           <span >Estado</span>
+             <Select className="mt-1" onChange={(dato) => {
+                if(dato.target.value == "Devuelto") {
+                  alertDevuelto("producto")
+                  
+                }
+                else {
+                  cambiarMotivoDevolucion({ campo: '', valido: "true", desactivado: true });
+                }
+             }}>
+               <option>En produccion</option>
+               <option>Entregado</option>            
+             </Select>
+           </Label>
+         
+          
+       </ModalBody>
 
-            <div className="block w-full sm:hidden">
-              <Button block size="large" layout="outline" onClick={closeModal}>
-                Cancel
-              </Button>
-            </div>
-            <div className="block w-full sm:hidden">
-              <Button block size="large">
-                Accept
-              </Button>
-            </div>
-          </ModalFooter>
-        </Modal>
+       <ModalFooter>          
+         <div className="hidden sm:block">
+           <Button layout="outline" onClick={closeModalEditarProducto}>
+             Cancelar
+           </Button>
+         </div>
+         <div className="hidden sm:block">
+           <Button onClick={validacionFormularioEditarProducto}>Editar producto</Button>
+         </div>
+         
+         <div className="block w-full sm:hidden">
+           <Button block size="large" layout="outline" onClick={closeModalEditarProducto}>
+             Cancel
+           </Button>
+         </div>
+         <div className="block w-full sm:hidden">
+           <Button block size="large">
+             Accept
+           </Button>
+         </div>
+
+        
+       </ModalFooter>
+     </Modal>
+     </form>
+ </div> 
+           
+        </ModalBody>
+
+        <ModalFooter>          
+
+
+          <div className="block w-full sm:hidden">
+            <Button block size="large" layout="outline" onClick={closeModal}>
+              Cancel
+            </Button>
+          </div>
+          <div className="block w-full sm:hidden">
+            <Button block size="large">
+              Accept
+            </Button>
+          </div>
+        </ModalFooter>
+      </Modal>
       </form>
       <form action='' onSubmit={validacionFormulario}>
         <Modal isOpen={isModalOpenCrearPedido} onClose={closeModalCrearPedido}>
@@ -484,20 +658,6 @@ function Devoluciones() {
         </ModalFooter>
       </Modal>
 
-      <Modal isOpen={isModalOpen3} onClose={closeModal3}>
-        <ModalHeader>Eliminar Pedido</ModalHeader>
-        <ModalBody>
-          Pedido eliminado correctamente.
-        </ModalBody>
-        <ModalFooter>
-          <div className="hidden sm:block">
-            <Button onClick={closeModal3}>Aceptar</Button>
-          </div>
-          <div className="block w-full sm:hidden">
-            <Button block size="large" onClick={closeModal3}>Aceptar</Button>
-          </div>
-        </ModalFooter>
-      </Modal>
 
     </>
   )

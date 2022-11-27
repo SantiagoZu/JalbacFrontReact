@@ -8,7 +8,7 @@ export default [{
 {
     ID: '2',
     Rol: 'Empleado',
-    Correo: 'chochavaginon@misena.edu.co',
+    Correo: 'lol@misena.edu.co',
     Permisos: 'teke',
     Estado: 'Activo',
 }    

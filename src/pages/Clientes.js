@@ -61,7 +61,7 @@ function Clientes() {
       password: /^.{4,12}$/, // 4 a 12 digitos.
       correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
       telefono: /^\d{6,14}$/, // 7 a 14 numeros.
-      documento: /^\d{1,10}$/ // 7 a 14 numeros.
+      documento: /^[a-zA-Z0-9\_\-\.]{4,16}$/
   }
 
   // CREAR 
@@ -252,7 +252,7 @@ function Clientes() {
               <span>Documento</span>
               {/* <!-- focus-within sets the color for the icon when input is focused --> */}
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Ingrese su documento..." type="number" estado={documento} cambiarEstado={cambiarDocumento} expresionRegular={expresiones.documento} mensajeError={"Digíte el documento correctamente"} />
+                <Input2 placeholder="Ingrese su documento..." type="text" estado={documento} cambiarEstado={cambiarDocumento} expresionRegular={expresiones.documento} mensajeError={"Digíte el documento correctamente"} />
                 <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                 </div>
               </div>
@@ -263,7 +263,7 @@ function Clientes() {
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
                 <Input2
                   className="block w-full pl-10 mt-1 mb-3 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                  placeholder="Ingrese su correo..." estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Digíte el correo correctamente"}
+                  placeholder="Ingrese su correo..." estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Debe incluir simbolo @ y el dominio. Ejemplo: example@gmail.com"}
                 />
                 <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                 </div>
@@ -273,7 +273,7 @@ function Clientes() {
             <Label>
               <span>Nombres</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Ingrese su nombre..." type="text" estado={nombre} cambiarEstado={cambiarNombre} expresionRegular={expresiones.nombre} mensajeError={"Digíte el nombre correctamente"} />
+                <Input2 placeholder="Ingrese su nombre..." type="text" estado={nombre} cambiarEstado={cambiarNombre} expresionRegular={expresiones.nombre} mensajeError={"El nombre no puede incluir números"} />
                 <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                 </div>
               </div>
@@ -282,7 +282,7 @@ function Clientes() {
             <Label>
               <span>Apellidos</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Ingrese sus apellidos..." type="text" estado={apellido} cambiarEstado={cambiarApellido} expresionRegular={expresiones.nombre} mensajeError={"Digíte el apellido correctamente"} />
+                <Input2 placeholder="Ingrese sus apellidos..." type="text" estado={apellido} cambiarEstado={cambiarApellido} expresionRegular={expresiones.nombre} mensajeError={"El apellido no puede incluir números"} />
                 <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                 </div>
               </div>
@@ -340,7 +340,7 @@ function Clientes() {
                     <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
                         <Input2
                         className="block w-full pl-10 mt-1 mb-3 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                        placeholder="Ingrese su correo..." estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Digíte el correo correctamente"} 
+                        placeholder="Ingrese su correo..." estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Debe incluir simbolo @ y el dominio. Ejemplo: example@gmail.com"} 
                         />
                         <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                         </div>
@@ -350,7 +350,7 @@ function Clientes() {
                     <Label>
                     <span>Nombres</span>
                     <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                        <Input2 placeholder="Ingrese su nombre..." type="text" estado={nombre} cambiarEstado={cambiarNombre} expresionRegular={expresiones.nombre} mensajeError={"Digíte el nombre correctamente"} />
+                        <Input2 placeholder="Ingrese su nombre..." type="text" estado={nombre} cambiarEstado={cambiarNombre} expresionRegular={expresiones.nombre} mensajeError={"El nombre no puede incluir números"} />
                         <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                         </div>
                     </div>
@@ -359,7 +359,7 @@ function Clientes() {
                     <Label>
                     <span>Apellidos</span>
                     <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                        <Input2 placeholder="Ingrese sus apellidos..." type="text" estado={apellido} cambiarEstado={cambiarApellido} expresionRegular={expresiones.nombre} mensajeError={"Digíte el apellido correctamente"} />
+                        <Input2 placeholder="Ingrese sus apellidos..." type="text" estado={apellido} cambiarEstado={cambiarApellido} expresionRegular={expresiones.nombre} mensajeError={"El apellido no puede incluir números"} />
                         <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                         </div>
                     </div>

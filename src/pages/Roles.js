@@ -205,7 +205,7 @@ function Roles() {
                   <p className="text-xs text-gray-600 dark:text-gray-400">{rol.Rol}</p>
                 </TableCell>
                 <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{rol.Estado}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{rol.Permisos}</p>
                 </TableCell>
                 <TableCell>
                   <p className="text-xs text-gray-600 dark:text-gray-400">{rol.Estado}</p>

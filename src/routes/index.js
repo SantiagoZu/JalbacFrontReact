@@ -18,6 +18,7 @@ const Pedidos = lazy(() => import('../pages/Pedidos'))
 const Devoluciones = lazy(() => import('../pages/Devoluciones'))
 const Perfil = lazy(() => import('../pages/Perfil'))
 const Historial = lazy(() => import('../pages/historialEstado'))
+const Backup = lazy(() => import('../pages/backUp'))
 
 /**
  * ⚠ These are internal routes!
@@ -97,6 +98,10 @@ const routes = [
   {
     path: '/historial',
     component: Historial,
+  },
+  {
+    path: '/backup',
+    component: Backup,
   },
 ]
 

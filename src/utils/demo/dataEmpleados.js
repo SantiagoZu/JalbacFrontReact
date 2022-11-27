@@ -16,7 +16,7 @@ export default [{
     Nombre: 'Chocha',
     Apellidos: 'Barreto',
     Documento: '1005576784',
-    Correo: 'chochagrande@misena.edu.co',
+    Correo: 'colo@misena.edu.co',
     Cargo: 'Diseñador 3D',
     Estado: 'Activo',
 }    

@@ -86,7 +86,7 @@ function Empleados() {
     password: /^.{4,12}$/, // 4 a 12 digitos.
     correo: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
     telefono: /^\d{7,14}$/, // 7 a 14 numeros.
-    documento: /^\d{1,10}$/ // 7 a 14 numeros.
+    documento: /^[a-zA-Z0-9\_\-\.]{4,16}$/
   }
 
   const alertEditadoCorrecto = () => {
@@ -170,7 +170,7 @@ function Empleados() {
         <Table>
           <TableHeader>
             <tr >
-              <TableCell>IDEmpleado</TableCell>
+              <TableCell>ID</TableCell>
               <TableCell>Usuario</TableCell>
               <TableCell>Rol</TableCell>
               <TableCell>Nombre</TableCell>
@@ -264,7 +264,7 @@ function Empleados() {
             <Label className="mt-4">
               <span>Documento</span>
               <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Documento" type="number" estado={documento} cambiarEstado={cambiarDocumento} expresionRegular={expresiones.documento} mensajeError={"Digíte su documento de identidad sin puntos ni letras"} />
+                <Input2 placeholder="Documento" type="number" estado={documento} cambiarEstado={cambiarDocumento} expresionRegular={expresiones.documento} mensajeError={"Digíte el documento correctamente"} />
                 <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
                 </div>
               </div>

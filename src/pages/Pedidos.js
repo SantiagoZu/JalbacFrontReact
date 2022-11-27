@@ -4,7 +4,9 @@ import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import { Modal, ModalHeader, ModalBody, ModalFooter,   } from '@windmill/react-ui';
 import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
+import CTA from '../components/CTA'
 import Swal from 'sweetalert2'
+import button2 from '../button';
 
 import {
   Table,
@@ -71,7 +73,7 @@ function Pedidos() {
 
    function openModalEditarProducto() {
      setIsModalOpenEditarProducto(true)
-     cambiarMotivoDevolucion({ campo: '', valido: null, desactivado : true })
+     cambiarMotivoDevolucion({ campo: '', valido: true, desactivado : true })
    }
  
    function closeModalEditarProducto() {
@@ -156,8 +158,17 @@ function Pedidos() {
       setIsModalOpen3(false)
     }
       /* Validación formulario */
-
+  const date = new Date()
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
   const [cliente, cambiarCliente] = useState({ campo: '', valido: null });
+  const [fechaPedido, cambiarFechaPedido] = useState({campo:  `${year}-${month}-${day}`, valido: null });
+  
+  
+  const [clienteEditarPedido, cambiarClienteEditarPedido] = useState({ campo: '', valido: null });
+  const [motivoDevolucionEditarPedido, cambiarMotivoDevolucionEditarPedido] = useState({ campo: '', valido: true, desactivado : true });
+  const [fechaPedidoEditar, cambiarFechaPedidoEditar] = useState({campo:  `${year}-${month}-${day}`, valido: null });
  // const [estadoPedido, cambiarEstadoPedido] = useState({ campo: '', valido: null, desactivado: true });
   
   const [formularioValido, cambiarFormularioValido] = useState(null);
@@ -167,16 +178,20 @@ function Pedidos() {
   const expresiones = {
     cliente: /^[a-zA-ZÀ-ÿ\s]{1,25}$/, // Letras, numeros, guion y guion_bajo
   }
-  const comparaFechas = (fecha1) => {
+  const expresionesEditarPedido = {
+    clienteEditarPedido: /^[a-zA-ZÀ-ÿ\s]{1,25}$/, // Letras, numeros, guion y guion_bajo
+    motivoDevolucionEditarPedido: /^[A-Za-z0-9]{0,100}$/, // Letras, numeros, guion y guion_bajo
+  }
+  /*const comparaFechas = (fecha1) => {
     if(new Date(fecha1).toLocaleDateString() >= new Date().toLocaleDateString("es-CO")){
-   
-      return true
+      cambiarFechaPedido({ campo: '', valido: true })
+      return fecha1.valido
     }
     else {
-      
-      return false
+      cambiarFechaPedido({ campo: '', valido: false })
+      return fecha1.valido
     }
-  }
+  }*/
 
  const alertEditadoCorrecto = (p) => {
     Swal.fire({
@@ -216,9 +231,9 @@ function Pedidos() {
   }
   
 
-  const alertDevuelto = (p) => {
+  const alertDevuelto = (p, formulario) => {
     Swal.fire({
-      title: `¿Estás seguro que deseas cambiar el estado del ${p} a devuelto?`,
+      title: `¿Estás seguro que deseas cambiar el estado del ${p} a devuelto? una vez cambiado el ${p} se enviará a la vista de devoluciones`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -228,10 +243,15 @@ function Pedidos() {
       if (result.isConfirmed) {
         Swal.fire(
           'Modificado!',
-          'El estado se ha editado correctamente.' + result.value,
+          'El estado se ha editado correctamente.',
           'success'
         )
-        cambiarMotivoDevolucion({ campo: '', valido: false, desactivado: false });
+        if(formulario == "editarPedido") {
+          cambiarMotivoDevolucionEditarPedido({ campo: '', valido: false, desactivado: false });
+        }
+        else if(formulario == "editarProducto"){
+          cambiarMotivoDevolucion({ campo: '', valido: false, desactivado: false })
+        }
       }
     })    
   }
@@ -256,15 +276,33 @@ function Pedidos() {
 
   const validacionFormulario = (e) => {
     e.preventDefault();
-    if (cliente.valido === 'true'  && comparaFechas(document.getElementById("fechaEditar").value)  && motivoDevolucion.valido  === true) {
+    if (cliente.valido === 'true'  && fechaPedido.valido === "true"  && motivoDevolucion.valido  === true) {
       
       cambiarFormularioValido(true);
       cambiarCliente({ campo: '', valido: null });
+      cambiarFechaPedido({ campo: '', valido: null });
+      
      if(motivoDevolucion.valido) {
        alertEditadoCorrecto("Pedido agregado");
       }
       alertEditadoCorrecto("Pedido editado");
 
+
+    } else {
+      cambiarFormularioValido(false);
+      alertEditadoIncorrecto();
+    }
+  }
+  
+  const validacionFormularioEditarPedido = (e) => {
+    e.preventDefault();
+    if (clienteEditarPedido.valido === 'true'  && fechaPedidoEditar.valido === "true"  && motivoDevolucionEditarPedido.valido  === "true") {
+      
+      cambiarFormularioValido(true);
+      cambiarCliente({ campo: '', valido: null });
+      
+     
+       alertEditadoCorrecto("Pedido agregado");
 
     } else {
       cambiarFormularioValido(false);
@@ -293,7 +331,7 @@ function Pedidos() {
   }
   const validacionFormularioProducto = (e) => {
     e.preventDefault();
-    if (nombre.valido   &&  peso.valido && tamanoAnillo.valido && tamanoPiedra.valido && detalle.valido ) {
+    if (nombre.valido === 'true'  &&  peso.valido === 'true' && tamanoAnillo.valido === 'true' && tamanoPiedra.valido === 'true' &&  detalle.valido === 'true' ) {
       
       cambiarFormularioValidoProducto(true);
       cambiarNombre({ campo: '', valido: null });
@@ -301,8 +339,8 @@ function Pedidos() {
       cambiarTamanoAnillo({ campo: '', valido: null });
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
-      cambiarMotivoDevolucion({ campo: '', valido: null, desactivado: true });
-      alertEditadoCorrecto("Producto editado");
+      cambiarMotivoDevolucion({ campo: '', valido: true, desactivado: true });
+      alertEditadoCorrecto("Producto agregado");
 
     } else {
       cambiarFormularioValidoProducto(false);
@@ -320,7 +358,7 @@ function Pedidos() {
       cambiarTamanoAnillo({ campo: '', valido: null });
       cambiarTamanoPiedra({ campo: '', valido: null });
       cambiarDetalle({ campo: '', valido: null });
-      cambiarMotivoDevolucion({ campo: '', valido: null });
+      cambiarMotivoDevolucion({ campo: '', valido: true });
       
     
       
@@ -418,20 +456,27 @@ function Pedidos() {
           />
         </TableFooter>
       </TableContainer>
-      <form action='' onSubmit={validacionFormulario}>   
+      <form action='' onSubmit={validacionFormularioEditarPedido}>   
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalHeader className='mb-3'>Editar pedido</ModalHeader>
         <ModalBody>          
             <Label className="mt-4">
               <span>Cliente</span>
-              <Input2 placeholder={"ingrese un cliente"} className="mt-1" estado={cliente} type={"text"}  cambiarEstado={cambiarCliente} expresionRegular={expresiones.cliente} mensajeError={"El nombre no puede tener numeros"} />                
+              <Input2 placeholder={"ingrese un cliente"} className="mt-1" estado={clienteEditarPedido} type={"text"}  cambiarEstado={cambiarClienteEditarPedido} expresionRegular={expresionesEditarPedido.clienteEditarPedido} mensajeError={"El nombre no puede tener numeros"} />                
             </Label>
-
             <Label className="mt-4">
-              <span>fecha Entrega</span>
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-              <input  className='block w-full pl-4 mt-1 mb-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input'  type="date"  id="fechaEditar" />       
-              </div>
+              <span>Fecha Entrega</span>
+          
+                <Input2
+                  placeholder="ingrese una fecha"
+                  estado={fechaPedidoEditar}
+                  type="date"
+                  cambiarEstado={cambiarFechaPedidoEditar}
+                  expresionRegular={false}
+                  mensajeError={"La fecha debe ser mayor que el dia de hoy"}
+            
+                  id="fechaEditarPedido"
+                />            
             </Label>
             <Label className="mt-4">
               <span>Asignar empleado</span>
@@ -445,11 +490,11 @@ function Pedidos() {
            <span >Estado</span>
              <Select onChange={(dato) => {
                 if(dato.target.value == "Devuelto") {
-                  alertDevuelto("pedido")
+                  alertDevuelto("pedido","editarPedido")
                   
                 }
                 else {
-                  cambiarMotivoDevolucion({ campo: '', valido: true, desactivado: true });
+                  cambiarMotivoDevolucionEditarPedido({ campo: '', valido: "true", desactivado: true });
                 }
              }}>
                <option>En produccion</option>
@@ -459,7 +504,7 @@ function Pedidos() {
            </Label>
            <Label className='mt-4' >
               <span>Motivo devolucion</span>
-              <Input2 placeholder={"ingrese motivo"} className="mt-1" estado={motivoDevolucion} type={"text"}  cambiarEstado={cambiarMotivoDevolucion} expresionRegular={expresionesProducto.motivoDevolucion} mensajeError={"el texto no puede  contener mas de 100 caracteres"} desactivado={motivoDevolucion.desactivado} />        
+              <Input2 placeholder={"ingrese motivo"} className="mt-1" estado={motivoDevolucionEditarPedido} type={"text"}  cambiarEstado={cambiarMotivoDevolucionEditarPedido} expresionRegular={expresionesEditarPedido.motivoDevolucionEditarPedido} mensajeError={"el texto no puede  contener mas de 100 caracteres"} desactivado={motivoDevolucionEditarPedido.desactivado} />        
            </Label>
          
               
@@ -589,7 +634,7 @@ function Pedidos() {
            <span >Estado</span>
              <Select className="mt-1" onChange={(dato) => {
                 if(dato.target.value == "Devuelto") {
-                  alertDevuelto("producto")
+                  alertDevuelto("producto","editarProducto")
                   
                 }
                 else {
@@ -645,7 +690,7 @@ function Pedidos() {
             </Button>
           </div>
           <div className="hidden sm:block">
-            <Button onClick={validacionFormulario}>Enviaraaaaa</Button>
+            <Button onClick={validacionFormularioEditarPedido}>Enviar</Button>
           </div>
 
           <div className="block w-full sm:hidden">
@@ -670,17 +715,20 @@ function Pedidos() {
             </Label>
 
             <Label className="mt-4">
-              <span>fecha Entrega</span>
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <input
-                  className="block w-full  mt-1 mb-3 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                  placeholder=""
+              <span>Fecha Entrega</span>
+          
+                <Input2
+                  placeholder="ingrese una fecha"
+                  estado={fechaPedido}
                   type="date"
+                  cambiarEstado={cambiarFechaPedido}
+                  expresionRegular={false}
+                  mensajeError={"La fecha debe ser mayor que el dia de hoy"}
+            
                   id="fechaEditar"
                 />
-                <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                </div>
-              </div>
+              
+            
             </Label>
             <Label className="mt-4">
               <span>Asignar empleado</span>
@@ -767,13 +815,13 @@ function Pedidos() {
        </Table>
   
        </TableContainer> 
-     <form action='' onSubmit={validacionFormularioEditarProducto}>   
+       <form action='' onSubmit={validacionFormularioEditarProducto}>   
      <Modal isOpen={isModalOpenEditarProducto} onClose={closeModalEditarProducto}>
-       <ModalHeader className='mb-3'>agregar producto</ModalHeader>
+       <ModalHeader className='mb-3'>Editar producto</ModalHeader>
        <ModalBody>          
            <Label className="mt-4">
              <span>Nombre</span>
-             <Input2 placeholder={"ingrese un nombre"} className="mt-1" estado={nombre} type={"text"}  cambiarEstado={cambiarNombre} expresionRegular={expresionesProducto.nombre} mensajeError={"El nombre no puede tener caracteres especiales"} />                
+             <Input2  placeholder={"ingrese un nombre"} className="mt-1" estado={nombre} type={"text"}  cambiarEstado={cambiarNombre} expresionRegular={expresionesProducto.nombre} mensajeError={"El nombre no puede tener caracteres especiales"} />                
            </Label>          
            <Label className="mt-4">
            <span>Tipo</span>
@@ -784,7 +832,7 @@ function Pedidos() {
              </Select>
            </Label>
            <Label className="mt-4">
-             <span>peso</span>
+             <span>Peso</span>
              <Input2 placeholder={"ingrese un peso en gramos"} className="mt-1" estado={peso} type={"number"}  cambiarEstado={cambiarPeso} expresionRegular={expresionesProducto.peso} mensajeError={"No puede ingresar letras"} />                
            </Label>
            <Label className="mt-4">
@@ -801,12 +849,13 @@ function Pedidos() {
                <option>Oro</option>
                <option>Oro rosado</option>
                <option>Plata</option>
+          
              </Select>
            </Label>
            <Label className="mt-4">
-             <span>Detalle</span>
-             <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 200 caracteres"} />                
-           </Label>   
+             <span>Detalles</span>
+             <Input2 placeholder={"ingrese detalles"} className="mt-1" estado={detalle} type={"text"}  cambiarEstado={cambiarDetalle} expresionRegular={expresionesProducto.detalle} mensajeError={"el texto no puede  contener mas de 100 caracteres"} />                
+           </Label>
            <Label className="mt-4">
               <span>Asignar empleado</span>
               <Select>
@@ -814,7 +863,28 @@ function Pedidos() {
                 <option>Barreto</option>
                 <option>Portela</option>
               </Select>
-            </Label>                      
+            </Label>
+           <Label className="mt-4">
+           <span >Estado</span>
+             <Select className="mt-1" onChange={(dato) => {
+                if(dato.target.value == "Devuelto") {
+                  alertDevuelto("producto", "editarProducto")
+                  
+                }
+                else {
+                  cambiarMotivoDevolucion({ campo: '', valido: "true", desactivado: true });
+                }
+             }}>
+               <option>En produccion</option>
+               <option >Devuelto</option>
+               <option>Entregado</option>            
+             </Select>
+           </Label>
+           <label className="block text-sm text-gray-700 dark:text-gray-400" >
+              <span>Motivo devolucion</span>
+              <Input2 placeholder={"ingrese motivo"} className="mt-1" estado={motivoDevolucion} type={"text"}  cambiarEstado={cambiarMotivoDevolucion} expresionRegular={expresionesProducto.motivoDevolucion} mensajeError={"el texto no puede  contener mas de 100 caracteres"} desactivado={motivoDevolucion.desactivado} />        
+           </label>
+         
           
        </ModalBody>
 
@@ -825,7 +895,7 @@ function Pedidos() {
            </Button>
          </div>
          <div className="hidden sm:block">
-           <Button onClick={validacionFormularioEditarProducto}>Agregar producto</Button>
+           <Button onClick={validacionFormularioEditarProducto}>Editar producto</Button>
          </div>
          
          <div className="block w-full sm:hidden">
@@ -919,7 +989,7 @@ function Pedidos() {
             </Button>
           </div>
           <div className="hidden sm:block">
-            <Button onClick={validacionFormulario}>Enviaroooooo</Button>
+            <Button onClick={validacionFormulario}>Enviar</Button>
           </div>
 
           <div className="block w-full sm:hidden">
@@ -935,7 +1005,6 @@ function Pedidos() {
         </ModalFooter>
       </Modal>
       </form>
-      
       <Modal isOpen={isModalOpen2CrearPedido} onClose={closeModal2CrearPedido}>
         <ModalHeader>Crear Pedido</ModalHeader>
         <ModalBody>
@@ -954,7 +1023,7 @@ function Pedidos() {
       </Modal>
       
       <Modal isOpen={isModalOpenVerDetalle} onClose={closeModalVerDetalle}  >
-        <ModalHeader className='mb-8'> detalles producto</ModalHeader>
+        <ModalHeader className='mb-8'> Detalles producto</ModalHeader>
         <ModalBody>          
         <TableContainer >
         <Table >
@@ -968,6 +1037,7 @@ function Pedidos() {
               <TableCell>Tamaño piedra</TableCell>
               <TableCell>Material</TableCell>
               <TableCell>Detalle</TableCell>
+              <TableCell>Estado</TableCell>
               <TableCell>Empleado encargado</TableCell>
               <TableCell>Motivo devolucion</TableCell>
             </tr>
@@ -998,6 +1068,9 @@ function Pedidos() {
                 </TableCell>                              
                 <TableCell>
                     <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.estado}</p>
                 </TableCell>                
                 <TableCell>
                     <p className="text-xs text-gray-600 dark:text-gray-400">{producto.empleadoAsignado}</p>

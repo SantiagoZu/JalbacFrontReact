@@ -4,9 +4,7 @@ import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
 import { Modal, ModalHeader, ModalBody, ModalFooter,   } from '@windmill/react-ui';
 import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
-import CTA from '../components/CTA'
 import Swal from 'sweetalert2'
-import button2 from '../button';
 
 import {
   Table,
@@ -900,6 +898,7 @@ function Pedidos() {
         </ModalFooter>
       </Modal>
       </form>
+      
       <Modal isOpen={isModalOpen2CrearPedido} onClose={closeModal2CrearPedido}>
         <ModalHeader>Crear Pedido</ModalHeader>
         <ModalBody>

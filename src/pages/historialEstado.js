@@ -4,8 +4,6 @@ import { Input, HelperText, Label, Select, Textarea } from '@windmill/react-ui'
 import { Modal, ModalHeader, ModalBody, ModalFooter, } from '@windmill/react-ui';
 import PageTitle from '../components/Typography/PageTitle'
 import SectionTitle from '../components/Typography/SectionTitle'
-import { MensajeErrorFormulario } from '../components/styles/styles';
-import Footer from '../components/Footer';
 
 import {
   Table,
@@ -20,19 +18,22 @@ import {
   Button,
   Pagination,
 } from '@windmill/react-ui'
-import { EditIcon, TrashIcon } from '../icons';
 import { SearchIcon } from '../icons'
-import response from '../utils/demo/dataEmpleados'
+import response from '../utils/demo/dataPedidos'
+import responseDetalles from '../utils/demo/dataProductos'
 import { Input2 } from '../components/Input';
 import Swal from 'sweetalert2'
 
 const response2 = response.concat([])
+const responseDetallesProductos = responseDetalles.concat([])
 
 function Historial() {
 
   const [pageTable2, setPageTable2] = useState(1)
+  const [pageTable3, setPageTable3] = useState(1)
 
   const [dataTable2, setDataTable2] = useState([])
+  const [dataTable3, setDataTable3] = useState([])
 
   // pagination setup
   const resultsPerPage = 10
@@ -48,28 +49,20 @@ function Historial() {
   useEffect(() => {
     setDataTable2(response2.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
   }, [pageTable2])
+  useEffect(() => {
+    setDataTable3(responseDetallesProductos.slice((pageTable3 - 1) * resultsPerPage, pageTable3 * resultsPerPage))
+  }, [pageTable3])
 
-  /* Despliegue modal editar */
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  // Modal Ver detalle
 
-  function openModal() {
-    setIsModalOpen(true)
+  const [isModalOpenVerDetalle, setIsModalOpenVerDetalle] = useState(false)
+
+  function openModalVerDetalle() {
+    setIsModalOpenVerDetalle(true)
   }
 
-  function closeModal() {
-    setIsModalOpen(false)
-  }
-
-  /* Confimarcion eliminacion */
-
-  const [isModalOpen3, setIsModalOpen3] = useState(false)
-
-  function openModal3() {
-    setIsModalOpen3(true)
-  }
-
-  function closeModal3() {
-    setIsModalOpen3(false)
+  function closeModalVerDetalle() {
+    setIsModalOpenVerDetalle(false)
   }
 
   /* Validación formulario */
@@ -89,62 +82,6 @@ function Historial() {
     documento: /^\d{1,10}$/ // 7 a 14 numeros.
   }
 
-  const alertEditadoCorrecto = () => {
-    Swal.fire({
-      title: "Empleado editado correctamente",
-      icon: "success"
-    })
-      .then((value) => {
-        closeModal();
-      })
-  }
-
-  const alertEditadoIncorrecto = () => {
-    Swal.fire({
-      title: "Digíte correctamente el formulario",
-      icon: "error"
-    })
-
-  }
-
-  const alertEliminado = () => {
-    Swal.fire({
-      title: '¿Estás seguro que deseas eliminar el empleado?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#7e3af2',
-      cancelButtonColor: '#d33',
-      confirmButtonText: '¡Sí, eliminar!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire(
-          '¡Eliminado!',
-          'El empleado se ha eliminado correctamente.',
-          'success'
-        )
-      }
-    })
-
-  }
-
-  const validacionFormulario = (e) => {
-    e.preventDefault();
-    if (nombre.valido === 'true' && apellido.valido === 'true' && documento.valido === 'true' && correo.valido === 'true') {
-
-      cambiarFormularioValido(true);
-      cambiarNombre({ campo: '', valido: null });
-      cambiarApellido({ campo: '', valido: null });
-      cambiarDocumento({ campo: '', valido: null });
-      cambiarCorreo({ campo: '', valido: null });
-
-      alertEditadoCorrecto();
-
-    } else {
-      cambiarFormularioValido(false);
-      alertEditadoIncorrecto();
-    }
-  }
-  
   return (
     <>
       <PageTitle>Historial estados del pedido</PageTitle>
@@ -166,57 +103,36 @@ function Historial() {
         <Table>
           <TableHeader>
             <tr >
-              <TableCell>IDEmpleado</TableCell>
-              <TableCell>Usuario</TableCell>
-              <TableCell>Rol</TableCell>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Apellidos</TableCell>
-              <TableCell>Documento</TableCell>
-              <TableCell>Correo</TableCell>
-              <TableCell>Cargo</TableCell>
+              <TableCell>ID</TableCell>
+              <TableCell>Fecha Pedido</TableCell>
+              <TableCell>Cliente</TableCell>
+              <TableCell>Fecha Entrega</TableCell>
               <TableCell>Estado</TableCell>
-              <TableCell>Acciones</TableCell>
+              <TableCell>Detalles Producto</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
             {dataTable2.map((empleado, i) => (
               <TableRow key={i}>
                 <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.ID}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.ID}</p>
                 </TableCell>
                 <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Usuario}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.FechaPedido}</p>
                 </TableCell>
                 <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Rol}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Cliente}</p>
                 </TableCell>
                 <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Nombre}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.FechaEntrega}</p>
                 </TableCell>
                 <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Apellidos}</p>
-                </TableCell>
-                <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Documento}</p>
-                </TableCell>
-                <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Correo}</p>
-                </TableCell>
-                <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Cargo}</p>
-                </TableCell>
-                <TableCell>
-                  <p className="text-xs text-gray-600 dark:text-gray-400" type={empleado.status}>{empleado.Estado}</p>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-4">
-                    <Button layout="link" size="icon" aria-label="Edit" onClick={openModal}>
-                      <EditIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                    <Button layout="link" size="icon" aria-label="Delete" onClick={alertEliminado}>
-                      <TrashIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                  </div>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{empleado.Estado}</p>
+                </TableCell>                
+                <TableCell >
+                  <Button layout="link"  className='ml-6 mr-6 pr-5' size="icon" aria-label="Edit" onClick={openModalVerDetalle}>
+                      <SearchIcon className="w-5 h-5 ml-6" aria-hidden="true" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -232,90 +148,74 @@ function Historial() {
         </TableFooter>
       </TableContainer>
 
-      <form action='' onSubmit={validacionFormulario}>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <ModalHeader className='mb-3'>Editar empleado</ModalHeader>
-          <ModalBody>
-            <Label className="mt-4">
-              <span>Rol</span>
-              <Select className="mt-1">
-                <option>Seleccionar...</option>
-                <option>Administrador</option>
-                <option>Empleado</option>
-              </Select>
-            </Label>
+      <Modal isOpen={isModalOpenVerDetalle} onClose={closeModalVerDetalle}  >
+        <ModalHeader className='mb-8'>Detalles producto</ModalHeader>
+        <ModalBody>          
+        <TableContainer >
+        <Table >
+          <TableHeader>
+            <tr >
+              <TableCell>ID</TableCell>
+              <TableCell>Nombre anillo</TableCell>
+              <TableCell>Tipo</TableCell>
+              <TableCell>Peso</TableCell>
+              <TableCell>Tamaño anillo</TableCell>
+              <TableCell>Tamaño piedra</TableCell>
+              <TableCell>Material</TableCell>
+              <TableCell>Detalle</TableCell>
+              <TableCell>Motivo devolucion</TableCell>
+            </tr>
+          </TableHeader>
+          <TableBody className="w-12">
+            {dataTable3.map((producto, i) => (
+              <TableRow key={i}>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.ID}</p>
+                </TableCell>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.nombre}</p>
+                </TableCell>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tipo}</p>
+                </TableCell>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.peso}</p>
+                </TableCell>
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoAnillo}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.tamanoPiedra}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.material}</p>
+                </TableCell>                              
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
+                </TableCell>                
+                <TableCell>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.motivoDevolucion}</p>
+                </TableCell>                
+               
+             
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+   
+        </TableContainer>           
+        </ModalBody>
 
-            <Label className="mt-4">
-              <span>Nombre</span>
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Nombre" type="text" estado={nombre} cambiarEstado={cambiarNombre} expresionRegular={expresiones.nombre} mensajeError={"El nombre no puede incluir números"} />
-              </div>
-            </Label>
-            <Label className="mt-4">
-              <span>Apellido</span>
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Apellido" type="text" estado={apellido} cambiarEstado={cambiarApellido} expresionRegular={expresiones.nombre} mensajeError={"El apellido no puede incluir números"} />
-              </div>
-            </Label>
-            <Label className="mt-4">
-              <span>Documento</span>
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Documento" type="number" estado={documento} cambiarEstado={cambiarDocumento} expresionRegular={expresiones.documento} mensajeError={"Digíte su documento de identidad sin puntos ni letras"} />
-                <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                </div>
-              </div>
-            </Label>
-            <Label className="mt-4">
-              <span>Correo</span>
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <Input2 placeholder="Correo" type="email" estado={correo} cambiarEstado={cambiarCorreo} expresionRegular={expresiones.correo} mensajeError={"Debe incluir simbolo @ y el dominio. Ejemplo: example@gmail.com"} />
-                <div className="absolute inset-y-0 flex items-center ml-3 pointer-events-none">
-                </div>
-              </div>
-            </Label>
-
-            <Label className="mt-4">
-              <span>Cargo</span>
-              <Select className="mt-1">
-                <option>Seleccionar...</option>
-                <option>Vaceador</option>
-                <option>Diseñador 3D</option>
-                <option>Terminador a mano</option>
-              </Select>
-            </Label>
-
-            <Label className="mt-4">
-              <span>Estado</span>
-              <Select className="mt-1">
-                <option>Activo</option>
-                <option>Inactivo</option>
-              </Select>
-            </Label>
-          </ModalBody>
-
-          <ModalFooter>
-            <div className="hidden sm:block">
-              <Button layout="outline" onClick={closeModal}>
-                Cancelar
-              </Button>
-            </div>
-            <div className="hidden sm:block">
-              <Button type="submit" onClick={validacionFormulario}>Enviar</Button>
-            </div>
-
-            <div className="block w-full sm:hidden">
-              <Button block size="large" layout="outline" onClick={closeModal}>
-                Cancel
-              </Button>
-            </div>
-            <div className="block w-full sm:hidden">
-              <Button block size="large" type='submit'>
-                Accept
-              </Button>
-            </div>
-          </ModalFooter>
-        </Modal>
-      </form>
+        <ModalFooter>          
+   
+          <div className="block w-full sm:hidden">
+            <Button block size="large" layout="outline" onClick={closeModalVerDetalle}>
+              Cerrar
+            </Button>
+          </div>
+      
+        </ModalFooter>
+      </Modal>
     </>
   )
 }

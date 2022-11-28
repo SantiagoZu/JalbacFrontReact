@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 
-import ImageLight from '../assets/img/forgot-password-office.jpeg'
+import ImageLight from '../assets/img/login-office.jpeg'
 import { Label, Input, Button } from '@windmill/react-ui'
 import { Input2 } from '../components/Input';
 import Swal from 'sweetalert2'
@@ -42,7 +42,7 @@ function recuperarPassword() {
           <div className="h-32 md:h-auto md:w-1/2">
             <img
               aria-hidden="true"
-              className="object-cover w-full h-full dark:hidden"
+              className="object-cover w-full h-full dark"
               src={ImageLight}
               alt="Office"
             />

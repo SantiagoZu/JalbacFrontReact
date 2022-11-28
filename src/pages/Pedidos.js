@@ -737,8 +737,7 @@ function Pedidos() {
                 <option>Barreto</option>
                 <option>Portela</option>
               </Select>
-            </Label>
-            
+            </Label>        
          
             <Button onClick={openModalProducto} className="mb-4 mt-4">
           Agregar producto
@@ -746,6 +745,7 @@ function Pedidos() {
             +
           </span>
         </Button>
+
         <div >
     <TableContainer >
        <Table >
@@ -759,6 +759,7 @@ function Pedidos() {
              <TableCell>Tamaño piedra</TableCell>
              <TableCell>Material</TableCell>
              <TableCell>Detalle</TableCell>
+             <TableCell>Cantidad</TableCell>
              <TableCell>Empleado encargado</TableCell>
              <TableCell>Motivo devolucion</TableCell>
              <TableCell>acciones</TableCell>
@@ -790,7 +791,10 @@ function Pedidos() {
                </TableCell>                              
                <TableCell>
                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.detalle}</p>
-               </TableCell>                
+               </TableCell> 
+               <TableCell>
+                   <p className="text-xs text-gray-600 dark:text-gray-400">5</p>
+               </TableCell>                 
                <TableCell>
                    <p className="text-xs text-gray-600 dark:text-gray-400">{producto.empleadoAsignado}</p>
                </TableCell>                
